@@ -1,0 +1,5 @@
+﻿id_local;nombre_local;localidad;provincia;jefe_zonal;tipo_zona;fecha_apertura;fecha_cierre;latitud;longitud
+L001;Sucursal Villa Arrayán;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;22/06/2013;;-35.114308;-60.578506
+L002;Sucursal Villa Arrayán II;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;15/04/2017;;-35.200475;-60.559402
+L003;Sucursal Villa Arrayán III;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;01/05/2019;;-35.139517;-60.512829
+L004;Sucursal Villa Arrayán IV;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;13/03/2021;;-35.196380;-60.499541

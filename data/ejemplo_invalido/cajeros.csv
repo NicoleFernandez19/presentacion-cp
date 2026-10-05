@@ -1,0 +1,16 @@
+﻿id_cajero;nombre_cajero;id_local_actual;fecha_alta;fecha_baja
+C0001;Amaranta Umbriaga;L001;16/01/2025;
+C0002;Camilo Ambrusella;L001;15/11/2024;
+C0003;Ornella Sanchinelli;L001;12/12/2024;
+C0004;Camilo Huaycuré;L001;12/02/2025;
+C0005;Joaquín Hormigal;L001;18/01/2024;
+C0006;Karina Lastrabales;L001;10/01/2025;
+C0007;Bruno Ostrovaldo;L001;05/04/2021;
+C0008;Patricio Estrambosi;L002;12/12/2018;
+C0009;Belén Tolosendi;L002;16/10/2025;
+C0010;Helena Falucchio;L002;30/06/2021;
+C0012;Julieta Kentrola;L002;28/02/2018;
+C0013;Helena Huaycuré;L002;05/05/2021;
+C0014;Valentina Sanchinelli;L003;25/04/2017;
+C0015;Patricio Estrambosi;L003;24/01/2018;
+C0016;Camilo Jaramillón;L003;18/02/2021;

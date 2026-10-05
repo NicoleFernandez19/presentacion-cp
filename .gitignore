@@ -1,0 +1,20 @@
+# Datos reales: no salen del equipo
+data/entrada/
+
+# Credenciales de la base
+conexion.ini
+
+# Salida regenerable
+dist/
+
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Maestro con nombres reales de personas
+data/maestros/
+
+# Respaldo generado con datos reales embebidos
+respaldo_version_interactiva/presentacion-interactiva.html

@@ -1,0 +1,61 @@
+﻿id_local;nombre_local;localidad;provincia;jefe_zonal;tipo_zona;fecha_apertura;fecha_cierre;latitud;longitud
+L001;Sucursal Villa Arrayán;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;22/06/2013;;-35.114308;-60.578506
+L002;Sucursal Villa Arrayán II;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;15/04/2017;;-35.200475;-60.559402
+L003;Sucursal Villa Arrayán III;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;01/05/2019;;-35.139517;-60.512829
+L004;Sucursal Villa Arrayán IV;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;13/03/2021;;-35.196380;-60.499541
+L005;Sucursal Villa Arrayán V;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;01/02/2026;;-35.112021;-60.562649
+L006;Sucursal Villa Arrayán VI;Villa Arrayán;Buenos Aires;Dora Vergarola;Alto;14/02/2011;;-35.105095;-60.521336
+L007;Sucursal San Ruperto del Sauce;San Ruperto del Sauce;Buenos Aires;Dora Vergarola;Bajo;10/09/2018;;-36.130032;-60.312356
+L008;Sucursal San Ruperto del Sauce II;San Ruperto del Sauce;Buenos Aires;Dora Vergarola;Bajo;23/02/2014;;-36.192877;-60.337093
+L009;Sucursal Lomas de Quindal;Lomas de Quindal;Buenos Aires;Dora Vergarola;Alto;01/02/2020;;;
+L010;Sucursal Lomas de Quindal II;Lomas de Quindal;Buenos Aires;Dora Vergarola;Alto;15/01/2016;;-35.823535;-57.770562
+L011;Sucursal Puerto Malvarrosa;Puerto Malvarrosa;Buenos Aires;Dora Vergarola;Bajo;03/10/2012;;-34.672974;-59.756915
+L012;Sucursal Puerto Malvarrosa II;Puerto Malvarrosa;Buenos Aires;Dora Vergarola;Bajo;07/08/2023;;-34.703089;-59.781114
+L013;Sucursal Puerto Malvarrosa III;Puerto Malvarrosa;Buenos Aires;Dora Vergarola;Bajo;06/05/2019;;-34.626513;-59.765087
+L014;Sucursal Puerto Malvarrosa IV;Puerto Malvarrosa;Buenos Aires;Dora Vergarola;Bajo;19/12/2023;;-34.671521;-59.793016
+L015;Sucursal Colonia Tremolar;Colonia Tremolar;Buenos Aires;Hugo Trebuquén;Bajo;01/05/2026;;-35.966538;-60.748103
+L016;Sucursal Barrancas de Zurell;Barrancas de Zurell;Buenos Aires;Hugo Trebuquén;Bajo;12/11/2022;;-36.529584;-58.941740
+L017;Sucursal Nueva Pampira;Nueva Pampira;Buenos Aires;Hugo Trebuquén;Alto;02/01/2012;;-36.552567;-60.945756
+L018;Sucursal Nueva Pampira II;Nueva Pampira;Buenos Aires;Hugo Trebuquén;Alto;30/12/2019;;-36.545844;-60.963951
+L019;Sucursal Fortín Dalmecia;Fortín Dalmecia;Buenos Aires;Hugo Trebuquén;Bajo;09/11/2013;;-35.651860;-60.585325
+L020;Sucursal Fortín Dalmecia II;Fortín Dalmecia;Buenos Aires;Hugo Trebuquén;Bajo;04/07/2009;30/06/2026;-35.608112;-60.549698
+L021;Sucursal Sierra Bermejal;Sierra Bermejal;Córdoba;Inés Maldonardo;Alto;14/03/2019;;-31.144803;-63.020767
+L022;Sucursal Sierra Bermejal II;Sierra Bermejal;Córdoba;Inés Maldonardo;Alto;02/11/2019;;-31.104612;-63.045914
+L023;Sucursal Sierra Bermejal III;Sierra Bermejal;Córdoba;Inés Maldonardo;Alto;02/03/2019;;-31.099693;-63.041367
+L024;Sucursal Villa Corcolén;Villa Corcolén;Córdoba;Inés Maldonardo;Bajo;15/05/2015;;-31.978944;-63.095253
+L025;Sucursal Villa Corcolén II;Villa Corcolén;Córdoba;Inés Maldonardo;Bajo;20/06/2018;;-31.926007;-63.094067
+L026;Sucursal Paso Ñandubal;Paso Ñandubal;Córdoba;Inés Maldonardo;Bajo;15/11/2010;;;
+L027;Sucursal Los Talares de Umbría;Los Talares de Umbría;Córdoba;Inés Maldonardo;Bajo;13/10/2019;;-30.803925;-64.330469
+L028;Sucursal Cerro Manzurro;Cerro Manzurro;Córdoba;Rubén Escalderón;Bajo;12/05/2012;;-30.444339;-63.383889
+L029;Sucursal Cerro Manzurro II;Cerro Manzurro;Córdoba;Rubén Escalderón;Bajo;22/04/2022;;-30.475960;-63.423730
+L030;Sucursal Cerro Manzurro III;Cerro Manzurro;Córdoba;Rubén Escalderón;Bajo;21/12/2013;;-30.468165;-63.376994
+L031;Sucursal Cerro Manzurro IV;Cerro Manzurro;Córdoba;Rubén Escalderón;Bajo;30/06/2009;;-30.490790;-63.432168
+L032;Sucursal Estación Jarillal;Estación Jarillal;Córdoba;Rubén Escalderón;Bajo;19/02/2018;;-32.653495;-64.102139
+L033;Sucursal Estación Jarillal II;Estación Jarillal;Córdoba;Rubén Escalderón;Bajo;27/12/2017;;-32.645648;-64.093944
+L034;Sucursal Puerto Almiranda;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;12/08/2019;;-31.287947;-61.618222
+L035;Sucursal Puerto Almiranda II;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;14/08/2014;;-31.305911;-61.600351
+L036;Sucursal Puerto Almiranda III;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;03/01/2018;;-31.217025;-61.633016
+L037;Sucursal Puerto Almiranda IV;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;11/07/2013;;-31.285796;-61.585650
+L038;Sucursal Puerto Almiranda V;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;10/05/2013;;-31.259797;-61.597040
+L039;Sucursal Puerto Almiranda VI;Puerto Almiranda;Santa Fe;Rubén Escalderón;Alto;03/10/2009;;-31.219145;-61.584754
+L040;Sucursal Colonia Vergel Nuevo;Colonia Vergel Nuevo;Santa Fe;Rubén Escalderón;Bajo;10/11/2021;;;
+L041;Sucursal Campo Zarandí;Campo Zarandí;Santa Fe;Lucía Pinamontti;Bajo;14/07/2010;;-31.174961;-60.304753
+L042;Sucursal Campo Zarandí II;Campo Zarandí;Santa Fe;Lucía Pinamontti;Bajo;04/09/2009;;-31.155523;-60.305837
+L043;Sucursal Villa Gaviotal;Villa Gaviotal;Santa Fe;Lucía Pinamontti;Alto;01/08/2021;;-29.953339;-61.376274
+L044;Sucursal Villa Gaviotal II;Villa Gaviotal;Santa Fe;Lucía Pinamontti;Alto;23/05/2011;;-30.029632;-61.380265
+L045;Sucursal Villa Gaviotal III;Villa Gaviotal;Santa Fe;Lucía Pinamontti;Alto;29/07/2015;;-30.004361;-61.440528
+L046;Sucursal San Ariel del Llano;San Ariel del Llano;Santa Fe;Lucía Pinamontti;Bajo;19/06/2017;;-31.325203;-61.672835
+L047;Sucursal San Ariel del Llano II;San Ariel del Llano;Santa Fe;Lucía Pinamontti;Bajo;01/04/2021;;-31.301111;-61.723260
+L048;Sucursal San Ariel del Llano III;San Ariel del Llano;Santa Fe;Lucía Pinamontti;Bajo;04/10/2019;;-31.288526;-61.730915
+L049;Sucursal Laguna Tordilla;Laguna Tordilla;Santa Fe;Lucía Pinamontti;Bajo;24/07/2010;;-30.962060;-60.340947
+L050;Sucursal Valle Pirquén;Valle Pirquén;Mendoza;Omar Zurrieta;Alto;18/04/2022;;-34.415844;-67.774546
+L051;Sucursal Valle Pirquén II;Valle Pirquén;Mendoza;Omar Zurrieta;Alto;17/03/2016;;-34.377837;-67.747771
+L052;Sucursal Alto Cuyanco;Alto Cuyanco;Mendoza;Omar Zurrieta;Alto;22/02/2015;;-34.008597;-69.283663
+L053;Sucursal Alto Cuyanco II;Alto Cuyanco;Mendoza;Omar Zurrieta;Alto;05/09/2014;;-34.025818;-69.216513
+L054;Sucursal Alto Cuyanco III;Alto Cuyanco;Mendoza;Omar Zurrieta;Alto;10/05/2023;;-34.045584;-69.236794
+L055;Sucursal Alto Cuyanco IV;Alto Cuyanco;Mendoza;Omar Zurrieta;Alto;04/02/2023;;;
+L056;Sucursal Alto Cuyanco V;Alto Cuyanco;Mendoza;Omar Zurrieta;Alto;23/08/2019;;-34.052153;-69.219992
+L057;Sucursal Villa Sarmental;Villa Sarmental;Mendoza;Omar Zurrieta;Bajo;13/11/2013;;-33.322646;-68.069209
+L058;Sucursal Cuesta Bermellón;Cuesta Bermellón;Mendoza;Omar Zurrieta;Bajo;04/10/2023;;-33.371387;-68.804122
+L059;Sucursal Cuesta Bermellón II;Cuesta Bermellón;Mendoza;Omar Zurrieta;Bajo;18/09/2010;;-33.368850;-68.777202
+L060;Sucursal Oasis Quimilar;Oasis Quimilar;Mendoza;Omar Zurrieta;Bajo;28/01/2020;;-33.330505;-67.836338

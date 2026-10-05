@@ -1,0 +1,280 @@
+{
+  "presentacion": {
+    "titulo": "Presentación Anual de la Red",
+    "subtitulo": "Canal Propio · Evolución del año",
+    "presentador": "Jefatura de Jefes Zonales",
+    "area": "Operaciones Argentina",
+    "objetivo_reunion": "Revisar la evolución de la red durante el año: volumen, actividad y productividad de los cajeros, por jefe zonal y por tipo de zona.",
+    "_nota_modo_reunion": "Modo reunión: sin filtros ni interacción. 'laminas' es el guion, en orden; una lámina registrada que no figura acá no se presenta. 'filas_ranking' es cuántas filas entran por lista sin scroll. 'mostrar_nombres_cajeros' en false muestra solo el legajo.",
+    "laminas": [
+      "Portada",
+      "Resumen ejecutivo",
+      "Indicadores del año",
+      "Mapa de calor anual",
+      "Red por jefe zonal",
+      "Operadores por mes",
+      "Tablero de avance por zona",
+      "Trayectoria de cada zona",
+      "Criterio de categorías",
+      "Categorías por jefe zonal",
+      "Mejores y peores locales",
+      "Mejores y peores cajeros",
+      "Hallazgos por zona",
+      "Decisiones y próximos pasos"
+    ],
+    "filas_ranking": 5,
+    "mostrar_nombres_cajeros": false
+  },
+  "periodo": {
+    "modo_ultimo_mes": "ultimo_completo",
+    "anio_referencia": null
+  },
+  "productividad": {
+    "minimo_meses_activos": 3,
+    "minimo_meses_activos_trimestre": 2,
+    "percentil_corte_bajo": 33,
+    "percentil_corte_alto": 67,
+    "etiquetas_categoria": {
+      "alta": "Alta",
+      "media": "Media",
+      "baja": "Baja",
+      "sin_datos": "Sin datos suficientes"
+    }
+  },
+  "tipo_zona": {
+    "porcentaje_localidades_alto_movimiento": 30,
+    "etiquetas": {
+      "alto": "Alto movimiento",
+      "bajo": "Bajo movimiento"
+    }
+  },
+  "rankings": {
+    "cajeros_mejores": 20,
+    "cajeros_peores": 20,
+    "mejora": 10,
+    "locales_mejores": 10,
+    "locales_peores": 10,
+    "modo_por_defecto": "relativo",
+    "minimo_meses_local": 6
+  },
+  "concentracion": {
+    "porcentaje_cajeros": 20
+  },
+  "gestion_zonal": {
+    "_nota": "Criterio de comparación entre jefes zonales (D-27). La cola crónica se calcula y se muestra, pero no pondera: medía el local y no a la persona.",
+    "pesos": {
+      "rendimiento": 40,
+      "cobertura": 20,
+      "evolucion": 20
+    },
+    "grupo_pares": {
+      "origen_preferido": "region",
+      "minimo_cajero_mes": 200,
+      "etiqueta_resto": "Resto de la red"
+    },
+    "cola_cronica": {
+      "percentil": 25,
+      "minimo_meses": 6
+    },
+    "estabilidad": {
+      "iteraciones": 400,
+      "semilla": 20260922,
+      "intervalo": 80
+    },
+    "brecha_plaza": {
+      "minimo_meses_local": 6,
+      "ratio_minimo": 1.4
+    },
+    "etiquetas_grupo": {
+      "adelante": "Adelante",
+      "en_linea": "En línea",
+      "atras": "Atrás"
+    },
+    "colores_grupo": {
+      "adelante": "#00a87e",
+      "en_linea": "#c98500",
+      "atras": "#db4a4a"
+    },
+    "entre_companeros": {
+      "umbral": 0.6,
+      "minimo_companeros": 3
+    }
+  },
+  "meses_activos": {
+    "tramos": [
+      {
+        "id": "completo",
+        "etiqueta": "Todos los meses",
+        "min": 100,
+        "max": 100
+      },
+      {
+        "id": "alto",
+        "etiqueta": "75% a 99%",
+        "min": 75,
+        "max": 99.999
+      },
+      {
+        "id": "medio",
+        "etiqueta": "50% a 74%",
+        "min": 50,
+        "max": 74.999
+      },
+      {
+        "id": "bajo",
+        "etiqueta": "Menos de 50%",
+        "min": 0.001,
+        "max": 49.999
+      },
+      {
+        "id": "nunca",
+        "etiqueta": "Nunca operó",
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  "antiguedad": {
+    "tramos": [
+      {
+        "id": "menos_6m",
+        "etiqueta": "Menos de 6 meses",
+        "min_meses": 0,
+        "max_meses": 6
+      },
+      {
+        "id": "6_12m",
+        "etiqueta": "6 a 12 meses",
+        "min_meses": 6,
+        "max_meses": 12
+      },
+      {
+        "id": "1_3a",
+        "etiqueta": "1 a 3 años",
+        "min_meses": 12,
+        "max_meses": 36
+      },
+      {
+        "id": "mas_3a",
+        "etiqueta": "Más de 3 años",
+        "min_meses": 36,
+        "max_meses": null
+      }
+    ]
+  },
+  "grupos": {
+    "orden": [
+      "SF2 sin TEC",
+      "TEC",
+      "MT"
+    ],
+    "etiquetas": {
+      "SF2 sin TEC": "SF2 (sin TEC)",
+      "TEC": "TEC",
+      "MT": "Money Transfer"
+    },
+    "descripciones": {
+      "SF2 sin TEC": "Cobranzas SF2 de todos los paycodes menos el producto TEC.",
+      "TEC": "Producto TEC: paycode E0O (Todo en Cuotas, desembolsos).",
+      "MT": "Money Transfer (Wupos): envíos y pagos."
+    }
+  },
+  "tipos_operacion": {
+    "etiquetas": {
+      "SF2 Positivo": "SF2 Positivo",
+      "Positivo Debito": "Positivo con débito",
+      "Positivo QR": "Positivo QR",
+      "Negativos": "Negativos (retiros)",
+      "Otro TipoOpe": "Otro tipo de operación",
+      "TEC Desembolsos": "Desembolsos TEC",
+      "Envios": "Envíos",
+      "Pagos": "Pagos"
+    },
+    "orden": [
+      "SF2 Positivo",
+      "Positivo Debito",
+      "Positivo QR",
+      "Negativos",
+      "Otro TipoOpe",
+      "TEC Desembolsos",
+      "Envios",
+      "Pagos"
+    ]
+  },
+  "colores": {
+    "_nota": "Paleta validada con el script de la skill dataviz contra la superficie oscura #0f121d: banda de luminosidad, piso de croma, separación para daltonismo y contraste. No cambiar un hex sin volver a correrlo.",
+    "categorias": {
+      "alta": "#00a87e",
+      "media": "#c98500",
+      "baja": "#db4a4a",
+      "sin_datos": "#64748b"
+    },
+    "tipo_zona": {
+      "alto": "#c98500",
+      "bajo": "#3987e5"
+    },
+    "grupos": {
+      "SF2 sin TEC": "#3987e5",
+      "TEC": "#c98500",
+      "MT": "#199e70"
+    },
+    "jefes_zonales": [
+      "#3987e5",
+      "#d95926",
+      "#199e70",
+      "#c98500",
+      "#d55181",
+      "#008300",
+      "#9085e9",
+      "#e66767",
+      "#1f9ca8",
+      "#a2712f"
+    ],
+    "series": {
+      "principal": "#ffcc00",
+      "secundaria": "#9085e9",
+      "positivo": "#00a87e",
+      "negativo": "#db4a4a",
+      "referencia": "#94a3b8",
+      "neutro": "#4b5563"
+    },
+    "rampa_secuencial": [
+      "#131a27",
+      "#3d3411",
+      "#7a6415",
+      "#b8931a",
+      "#ffcc00"
+    ]
+  },
+  "datos": {
+    "separador_csv": ";",
+    "codificacion": "utf-8",
+    "columna_localidad_derivada": true,
+    "prefijos_local_a_quitar": [
+      "C.S.",
+      "CS.",
+      "C.S",
+      "SUCURSAL"
+    ],
+    "sufijos_local_a_quitar": [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+      "X",
+      "JH",
+      "BIS"
+    ]
+  },
+  "salida": {
+    "archivo": "dist/presentacion.html",
+    "archivo_validacion": "dist/validacion.txt",
+    "prefijo_por_jefe_zonal": "presentacion-",
+    "tamanio_maximo_mb": 15
+  }
+}

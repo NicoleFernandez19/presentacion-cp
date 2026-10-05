@@ -1,0 +1,85 @@
+DATASET DE EJEMPLO - Presentacion anual de la red (Canal Propio)
+================================================================
+
+Generado por scripts/generar_ejemplo.py con semilla 20260921. Todo es ficticio:
+nombres de personas, de locales y de localidades son inventados; las provincias
+son reales solo para que el mapa de la lamina 13 tenga sentido.
+
+Formato: CSV, UTF-8 con BOM, separador ';', fechas dd/mm/aaaa, decimales con punto.
+
+ARCHIVOS
+--------
+transacciones_mensuales.csv    37399 filas  anio;mes;id_cajero;id_local;grupo;tipo_operacion;cantidad;cantidad_rechazadas
+actividad_mensual.csv           6151 filas  anio;mes;id_cajero;dias_activos
+cajeros.csv                      350 filas  id_cajero;nombre_cajero;id_local_actual;fecha_alta;fecha_baja
+locales.csv                       60 filas  id_local;nombre_local;localidad;provincia;jefe_zonal;tipo_zona;fecha_apertura;fecha_cierre;latitud;longitud
+hitos.csv                          9 filas  fecha;titulo;descripcion;jefe_zonal   (jefe_zonal vacio = toda la red)
+actividad_horaria.csv          14476 filas  anio;mes;id_local;dia_semana;hora;cantidad  (dia_semana 1=lunes..7=domingo)
+capacitaciones.csv               199 filas  id_cajero;fecha;nombre_capacitacion
+textos_cierre.csv                  7 filas  jefe_zonal;hallazgos;objetivos       (jefe_zonal vacio = toda la red)
+
+FORMA GENERAL
+-------------
+- 6 jefes zonales, 60 locales, 25 localidades, 4 provincias, 350 cajeros.
+- 20 meses: 01/2025 a 12/2025 (ano anterior completo) y 01/2026 a 08/2026 (ano en
+  curso hasta el mes anterior al actual, siendo hoy 21/09/2026). Los dos anos van
+  en el MISMO transacciones_mensuales.csv y actividad_mensual.csv: el ano anterior
+  es un filtro por la columna 'anio', no un archivo aparte.
+- 4 tipos de operacion con los valores del dato real. Mix obtenido:
+  SF2 Positivo 57.9%, Positivo Debito 19.2%, Negativos 7.9%, Pagos 6.6%, Positivo QR 4.9%, Envios 3.3%, TEC Desembolsos 0.1%
+- Grupos (D-01): SF2 sin TEC, TEC y MT, cada uno con sus tipos de operacion. No hay montos
+  negativos. 'cantidad' siempre positiva.
+- tipo_zona: 29 locales en zona Alto y 31 en zona Bajo; todos los locales de
+  una misma localidad comparten el tipo de zona.
+- actividad_mensual trae una fila por cada mes en que el cajero estuvo habilitado,
+  con dias_activos = 0 en los meses sin operaciones. Los cajeros que nunca operaron
+  no tienen ninguna fila (caso "fila ausente").
+
+CASOS BORDE INCLUIDOS (verificados al generar)
+----------------------------------------------
+1.  Cajeros habilitados que NUNCA operaron: 10
+    (estan en cajeros.csv y no tienen ninguna fila en transacciones_mensuales.csv)
+    IDs: C0073, C0078, C0128, C0142, C0217, C0222, C0271, C0279, C0330, C0348
+2.  Altas durante el ano en curso: 31 cajeros con fecha_alta en 2026.
+    Bajas durante el ano en curso: 13 cajeros con fecha_baja en 2026.
+    Las operaciones existen solo dentro de la ventana [fecha_alta, fecha_baja].
+3.  Cajeros que cambiaron de local en el periodo: 19
+    (aparecen con distinto id_local en meses distintos; id_local_actual es el
+    local del ultimo mes en que operaron)
+4.  Cajeros con 1 o 2 meses activos en todo el periodo: 15
+    (quedan por debajo de productividad.minimo_meses_activos = 3 de
+    config.json y deben mostrarse como "Sin datos suficientes")
+5.  Locales sin coordenadas (latitud y longitud vacias): 4
+    IDs: L009, L026, L040, L055
+6.  Local con un mes entero sin datos en el medio del periodo:
+    L001 (Sucursal Villa Arrayán) no tiene ninguna fila en 04/2026,
+    pero si en 03/2026 y en 05/2026.
+    Ademas, algunos locales chicos (2 o 3 cajeros) pueden quedarse sin
+    operaciones en meses sueltos porque todo su plantel estuvo inactivo: es
+    el comportamiento esperado y sirve para probar los estados vacios.
+7.  Pico estacional de diciembre: 12/2025 tiene 710.491 operaciones contra un
+    promedio mensual de 523.539 en 2025, es decir +35.7%.
+    (12/2026 queda fuera del periodo, que termina en 08/2026.)
+8.  Locales con fecha_apertura dentro del ano en curso:
+    L005 (Sucursal Villa Arrayán V) abre el 01/02/2026
+    L015 (Sucursal Colonia Tremolar) abre el 01/05/2026
+    Local con fecha_cierre dentro del ano en curso:
+    L020 (Sucursal Fortín Dalmecia II) cierra el 30/06/2026
+    Ninguno tiene operaciones fuera de esa ventana.
+9.  Cajeros con cambio fuerte de desempeno entre el primer y el segundo trimestre
+    de 2026 (para la lamina 33, "mayor mejora"):
+    mayor mejora: C0329 (+385% de operaciones)
+    mayor caida:  C0181 (-71% de operaciones)
+10. Heterogeneidad: de 1 a 14 cajeros por local abierto (11 locales de 2 o 3
+    cajeros y 6 de 11 o mas; un traslado puede dejar a un local con uno solo),
+    productividad por cajero muy dispersa, y localidades de alto movimiento con
+    bastante mas volumen que las de bajo: 297.980 operaciones por local en
+    zona Alto contra 78.941 en zona Bajo.
+
+COHERENCIA VERIFICADA
+---------------------
+- dias_activos > 0 si y solo si el cajero tiene operaciones ese mes: 0 discrepancias.
+- dias_activos mayores a los dias del mes: 0.
+- IDs de transacciones_mensuales sin maestro: 0 cajeros, 0 locales.
+- Filas duplicadas por (anio, mes, id_cajero, id_local, tipo_operacion): 0.
+- Cantidades negativas: 0.

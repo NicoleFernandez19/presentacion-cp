@@ -1,0 +1,20 @@
+DATASET INVALIDO - para probar el reporte de validacion (Requerimiento.md 3)
+==========================================================================
+
+Recorte chico del dataset de data/ejemplo/ (un jefe zonal, 4 locales, 15
+cajeros, 01/2026 a 06/2026) con un error de cada tipo que el reporte de
+validacion tiene que detectar. Solo trae las 4 tablas obligatorias.
+Los numeros de linea incluyen la linea 1 de encabezado.
+
+ERRORES SEMBRADOS
+-----------------
+1. actividad_mensual.csv linea 32: dias_activos 35 MAYOR a los 30 dias de abril de 2026 (cajero C0001).
+2. transacciones_mensuales.csv linea 435: FILA DUPLICADA, copia exacta de la linea 12 (clave 2026-1-C0002-L001-Positivo Debito). Ambas lineas forman el duplicado.
+3. transacciones_mensuales.csv linea 436: id_cajero C9999 SIN CORRESPONDENCIA en cajeros.csv.
+4. transacciones_mensuales.csv linea 437: id_local L999 SIN CORRESPONDENCIA en locales.csv.
+5. transacciones_mensuales.csv linea 438: tipo_operacion 'Transferencia XYZ' NO RECONOCIDO (validos: SF2 Positivo, Positivo Debito, Positivo QR, Negativos, TEC Desembolsos, Envios, Pagos).
+6. transacciones_mensuales.csv linea 439: cantidad NEGATIVA (-143).
+7. transacciones_mensuales.csv y actividad_mensual.csv: MES FALTANTE, no hay ninguna fila de 03/2026 en un periodo que va de 01/2026 a 06/2026.
+
+Todo lo demas del recorte es valido: cualquier otro hallazgo del reporte de
+validacion es un falso positivo.
