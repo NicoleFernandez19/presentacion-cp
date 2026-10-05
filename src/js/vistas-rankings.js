@@ -13,11 +13,6 @@
     cuerpo.appendChild(UI.vacio('Sin datos para este recorte', detalle || 'No hay operaciones en el período.'));
   }
 
-  /* Cuántas filas entran en cada lista sin scroll (config.presentacion). */
-  function filasPorLista() {
-    return global.Datos.config.presentacion.filas_ranking || 5;
-  }
-
   function jefeDe(local) {
     return local >= 0 ? global.Datos.raw.dim.locales.jefe[local] : -1;
   }
@@ -164,15 +159,6 @@
     }
   }
 
-  function filaDonasPorJefe(grupos, unidad) {
-    const filaDonas = UI.fila();
-    filaDonas.style.flexShrink = '0';
-    grupos.forEach(function (conf) {
-      filaDonas.appendChild(panelDonaPorJefe(conf, unidad, false));
-    });
-    return filaDonas;
-  }
-
   /* §4.9 — relativo ordena por percentil dentro del tipo de zona y desempata por
      IP; absoluto ordena por IP a secas. Los dos sobre el recorte (D-28). */
   function ordenar(lista, modo) {
@@ -208,109 +194,160 @@
 
   // ----------------------------------------------------------- Lámina 33
 
-  global.Navegacion.registrar({
-    seccion: SECCION,
-    titulo: 'Mejores y peores locales',
-    subtitulo: 'Los locales con mayor y menor IP promedio entre sus cajeros.',
-    render: function (host, ctx) {
-      if (ctx.vacio) return vacio(host, this);
-      const Datos = global.Datos;
-      const config = Datos.config;
-      /* Fuera las aperturas y los cierres: un local con cuatro meses de vida no
-         es un local flojo, y mezclarlos era la forma más rápida de castigar a
-         quien abrió un punto. El mínimo nunca supera los meses del recorte, para
-         que la lámina no quede vacía al filtrar un mes suelto. */
-      const minimoMeses = Math.min(config.rankings.minimo_meses_local || 0, ctx.periodos.length);
-      const comparables = ctx.metricasLocales().filter((l) => l.ipPromedio !== null);
-      const locales = comparables.filter((l) => l.mesesActivos >= minimoMeses);
-      const excluidos = comparables.length - locales.length;
-      if (!locales.length) {
-        return vacio(host, this, 'Ningún local del recorte llega a ' + minimoMeses +
-          ' meses con actividad y cajeros con datos suficientes.');
-      }
+  /* Locales: una lámina por punta del ranking, igual que cajeros. A la izquierda
+     la lista completa (config.rankings.locales_mejores / locales_peores) y al
+     costado una dona con de qué jefe zonal es cada uno. Con una lámina por punta
+     la lista entra entera en vez de recortarse a cinco filas.
 
-      const ordenados = locales.slice().sort((a, b) => b.ipPromedio - a.ipPromedio);
-      const mejores = ordenados.slice(0, filasPorLista());
-      const peores = ordenados.slice(-filasPorLista()).reverse();
-
-      const linea =
-        '<strong>' + mejores[0].nombre + '</strong> lidera con <strong>' + F().decimal(mejores[0].ipPromedio, 0) +
-        '</strong> operaciones por mes activo y por cajero, contra ' + F().decimal(peores[0].ipPromedio, 0) +
-        ' de <strong>' + peores[0].nombre + '</strong>.';
-
-      if (peores[0].ipPromedio > 0) {
-        this.tituloActual = 'El mejor local rinde ' + F().decimal(mejores[0].ipPromedio / peores[0].ipPromedio, 1) +
-          ' veces lo que el último';
-      }
-      const cuerpo = UI.cabecera(host, this, linea);
-      const fila = UI.fila(true);
-
-      [
-        { titulo: 'Mejores locales', lista: mejores, color: Datos.color('positivo'), podio: true },
-        { titulo: 'Peores locales', lista: peores, color: Datos.color('negativo'), podio: false }
-      ].forEach(function (conf) {
-        const panel = UI.panel(
-          conf.titulo,
-          'por IP promedio de sus cajeros · ' + minimoMeses + ' meses o más de actividad'
-        );
-        panel.style.flex = '1 1 0';
-        panel.style.borderTop = '2px solid ' + conf.color;
-        panel.appendChild(
-          UI.tabla({
-            ordenable: false,
-            columnas: [
-              { titulo: '#', num: true, render: (f, i) => UI.elemento('span', 'posicion' + (conf.podio && i < 3 ? ' podio' : ''), String(i + 1)) },
-              { titulo: 'Local', num: false, render: (f) => f.nombre },
-              { titulo: 'Jefe zonal', num: false, render: (f) => Datos.jefe(f.jefe) },
-              { titulo: 'IP prom.', num: true, render: (f) => F().decimal(f.ipPromedio, 0) },
-              { titulo: 'Cajeros', num: true, render: (f) => F().entero(f.cajerosHabilitados) }
-            ],
-            filas: conf.lista
-          })
-        );
-        fila.appendChild(panel);
+     Fuera las aperturas y los cierres: un local con cuatro meses de vida no es
+     un local flojo, y mezclarlos era la forma más rápida de castigar a quien
+     abrió un punto. El mínimo nunca supera los meses del recorte, para que la
+     lámina no quede vacía al filtrar un mes suelto. */
+  /* Sin scroll (D-29): en pantallas chicas las filas que no entran enteras se
+     ocultan, en lugar de quedar cortadas a la mitad. */
+  function recortarFilas(panel) {
+    requestAnimationFrame(function () {
+      const caja = panel.querySelector('.tabla-caja');
+      if (!caja) return;
+      const tope = caja.getBoundingClientRect().bottom;
+      caja.querySelectorAll('tbody tr').forEach(function (tr) {
+        tr.style.visibility = tr.getBoundingClientRect().bottom > tope + 1 ? 'hidden' : '';
       });
+    });
+  }
 
-      cuerpo.appendChild(fila);
-
-      /* Las donas cuentan el ranking completo de config.rankings, no solo las
-         filas que entran en la tabla. */
-      cuerpo.appendChild(
-        filaDonasPorJefe(
-          [
-            { titulo: 'De quién son los mejores', lista: ordenados.slice(0, config.rankings.locales_mejores), color: Datos.color('positivo'), jefeDe: (l) => l.jefe },
-            { titulo: 'De quién son los peores', lista: ordenados.slice(-config.rankings.locales_peores), color: Datos.color('negativo'), jefeDe: (l) => l.jefe }
-          ],
-          'locales'
-        )
-      );
-    },
-    notas: function (ctx) {
+  function laminaLocales(conf) {
+    function base(ctx) {
       const config = global.Datos.config;
       const minimoMeses = Math.min(config.rankings.minimo_meses_local || 0, ctx.periodos.length);
       const comparables = ctx.metricasLocales().filter((l) => l.ipPromedio !== null);
       const locales = comparables.filter((l) => l.mesesActivos >= minimoMeses);
-      const excluidos = comparables.length - locales.length;
-      return (
-        '<div class="bloque"><h4>Guión para el orador</h4>' +
-        '<div class="guion">"Un local es el promedio de su gente, pero también de su ubicación. ' +
-        'Antes de sacar conclusiones conviene mirar la lámina de comparación contra el grupo de referencia."</div></div>' +
-        '<div class="bloque"><h4>Cómo se lee</h4>' +
-        '<p>El IP promedio del local es el promedio del IP de sus cajeros con datos suficientes, así que un ' +
-        'local con un solo cajero puede aparecer arriba o abajo con poca evidencia detrás. El tooltip muestra ' +
-        'cuántos cajeros lo sostienen.</p>' +
-        '<p>Entran solo los locales con <strong>' + minimoMeses + ' meses o más de actividad</strong>. ' +
-        'Sin ese corte, los últimos puestos estarían ocupados por aperturas del año: un local con cuatro meses de ' +
-        'vida rinde poco por encontrarse en su etapa inicial, no por una mala gestión.</p></div>' +
-        '<div class="bloque"><h4>Datos</h4><ul>' +
-        '<li>Locales comparables: <span class="dato">' + F().entero(locales.length) + '</span></li>' +
-        (excluidos
-          ? '<li>Excluidos por poca antigüedad: <span class="dato">' + F().entero(excluidos) + '</span></li>'
-          : '') +
-        '</ul></div>'
-      );
+      if (!locales.length) return { minimoMeses: minimoMeses, total: 0 };
+      const ordenados = locales.slice().sort((a, b) => b.ipPromedio - a.ipPromedio);
+      const n = config.rankings[conf.clave];
+      return {
+        minimoMeses: minimoMeses,
+        total: locales.length,
+        excluidos: comparables.length - locales.length,
+        elegidos: conf.mejores ? ordenados.slice(0, n) : ordenados.slice(-n).reverse()
+      };
     }
+
+    global.Navegacion.registrar({
+      seccion: SECCION,
+      titulo: conf.titulo,
+      subtitulo: conf.subtitulo,
+      render: function (host, ctx) {
+        if (ctx.vacio) return vacio(host, this);
+        const Datos = global.Datos;
+        const datos = base(ctx);
+        if (!datos.total) {
+          return vacio(host, this, 'Ningún local del recorte llega a ' + datos.minimoMeses +
+            ' meses con actividad y cajeros con datos suficientes.');
+        }
+        const lista = datos.elegidos;
+
+        const cuerpo = UI.cabecera(
+          host,
+          this,
+          '<strong>' + lista[0].nombre + '</strong> ' + conf.verbo + ' con <strong>' +
+            F().decimal(lista[0].ipPromedio, 0) + '</strong> operaciones por mes activo y por cajero.'
+        );
+        const fila = UI.fila(true);
+
+        const panelLista = UI.panel(
+          conf.panel,
+          'por IP promedio · ' + F().entero(datos.total) + ' locales con ' +
+            datos.minimoMeses + '+ meses de actividad'
+        );
+        panelLista.style.flex = '3.2 1 0';
+        panelLista.style.borderTop = '2px solid ' + Datos.color(conf.color);
+        panelLista.appendChild(
+          UI.tabla({
+            ordenable: false,
+            columnas: [
+              { titulo: '#', num: true, render: (f, i) => UI.elemento('span', 'posicion' + (conf.mejores && i < 3 ? ' podio' : ''), String(i + 1)) },
+              {
+                titulo: 'Local',
+                num: false,
+                // En pantallas chicas el nombre puede cortarse con «…»; el title lo muestra entero.
+                render: function (f) {
+                  const nombre = UI.elemento('span', null, f.nombre);
+                  nombre.title = f.nombre;
+                  return nombre;
+                }
+              },
+              { titulo: 'Jefe zonal', num: false, render: (f) => Datos.jefe(f.jefe) },
+              { titulo: 'IP prom.', num: true, render: (f) => F().decimal(f.ipPromedio, 0) },
+              { titulo: 'Cajeros', num: true, render: (f) => F().entero(f.cajerosHabilitados) }
+            ],
+            filas: lista
+          })
+        );
+        panelLista.classList.add('tabla-compacta', 'tabla-locales');
+        fila.appendChild(panelLista);
+
+        const dona = panelDonaPorJefe(
+          { titulo: 'De qué zona son', lista: lista, color: Datos.color(conf.color), jefeDe: (l) => l.jefe },
+          'locales',
+          true
+        );
+        dona.style.flex = '1.2 1 0';
+        fila.appendChild(dona);
+
+        cuerpo.appendChild(fila);
+        recortarFilas(panelLista);
+      },
+      notas: function (ctx) {
+        const Datos = global.Datos;
+        const datos = base(ctx);
+        if (!datos.total) return '';
+        const zonas = new Set(datos.elegidos.map((l) => l.jefe));
+        return (
+          '<div class="bloque"><h4>Guión para el orador</h4>' +
+          '<div class="guion">"' + conf.guion + '"</div></div>' +
+          '<div class="bloque"><h4>Cómo se lee</h4>' +
+          '<p>El IP promedio del local es el promedio del IP de sus cajeros con datos suficientes, así que un ' +
+          'local con un solo cajero puede aparecer arriba o abajo con poca evidencia detrás. La columna ' +
+          '<strong>Cajeros</strong> muestra cuántos lo sostienen.</p>' +
+          '<p>Entran solo los locales con <strong>' + datos.minimoMeses + ' meses o más de actividad</strong>. ' +
+          'Sin ese corte, los últimos puestos estarían ocupados por aperturas del año: un local con cuatro meses de ' +
+          'vida rinde poco por encontrarse en su etapa inicial, no por una mala gestión.</p></div>' +
+          '<div class="bloque"><h4>Datos</h4><ul>' +
+          '<li>Locales comparables: <span class="dato">' + F().entero(datos.total) + '</span></li>' +
+          (datos.excluidos
+            ? '<li>Excluidos por poca antigüedad: <span class="dato">' + F().entero(datos.excluidos) + '</span></li>'
+            : '') +
+          '<li>Zonas en esta lista: <span class="dato">' + F().entero(zonas.size) + '</span> de ' +
+          F().entero(Datos.raw.dim.jefes.length) + '</li>' +
+          '</ul></div>'
+        );
+      }
+    });
+  }
+
+  laminaLocales({
+    clave: 'locales_mejores',
+    mejores: true,
+    titulo: 'Mejores locales',
+    subtitulo: 'Los locales con mayor IP promedio entre sus cajeros y de qué zona es cada uno.',
+    panel: 'Mejores locales',
+    verbo: 'lidera',
+    color: 'positivo',
+    guion: 'Estos son los locales de mayor rendimiento. A la derecha se indica a qué zona pertenece cada uno. Un local es el promedio de su gente, pero también de su ubicación: antes de sacar conclusiones conviene mirarlo contra su grupo de referencia.'
   });
+
+  laminaLocales({
+    clave: 'locales_peores',
+    mejores: false,
+    titulo: 'Locales con menor IP',
+    subtitulo: 'Los locales con menor IP promedio entre sus cajeros y de qué zona es cada uno.',
+    panel: 'Locales con menor IP',
+    verbo: 'cierra la lista',
+    color: 'negativo',
+    guion: 'Estos son los locales con menos operaciones por mes activo y por cajero. A la derecha se indica a qué zona pertenece cada uno. Si una zona aparece en las dos listas, dentro de esa zona hay una brecha amplia entre sus locales.'
+  });
+
   /* Cajeros: una lámina por punta del ranking. A la izquierda la lista completa
      (config.rankings.cajeros_mejores / cajeros_peores) y al costado una dona con
      de qué jefe zonal es cada uno. Así el top 20 se lee entero y el reparto por
