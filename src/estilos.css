@@ -886,11 +886,23 @@ main.escenario { overflow: hidden; }
 .portada .portada-titulo { font-size: clamp(20px, 3.7cqi, 44px); line-height: 1.1; color: #fff; font-weight: 800; margin: 0; }
 .portada .portada-periodo { font-size: clamp(12px, 1.45cqi, 17px); color: var(--texto); }
 .portada .portada-objetivo { max-width: 74ch; margin: 0 auto; color: var(--texto-suave); font-size: clamp(11px, 1.25cqi, 14.5px); line-height: 1.5; }
-/* Con margen auto la grilla se encoge a su contenido, y las tarjetas
-   (container-type: inline-size) no aportan ancho propio: sin width quedan de
-   26px y el texto se sale. */
-.portada .portada-datos { width: 100%; max-width: 860px; margin: clamp(0px, 0.5cqi, 6px) auto 0; }
-@container portada (max-width: 600px) {
+/* Las tarjetas de la portada toman el ancho de su dato: el rótulo va en una
+   sola línea y el valor a tamaño completo, y la burbuja crece hasta
+   contenerlos. Sin container-type, porque una tarjeta contenedora no aporta
+   ancho propio y queda angosta aunque el texto no entre. */
+.portada .portada-datos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: clamp(0px, 0.5cqi, 6px) auto 0;
+}
+.portada .tarjeta { container-type: normal; flex: 0 0 auto; min-width: 170px; padding: 12px 22px; }
+.portada .tarjeta .rotulo,
+.portada .tarjeta .detalle { white-space: nowrap; }
+.portada .tarjeta .valor { font-size: 26px; white-space: nowrap; }
+.portada .tarjeta .valor.chico { font-size: 22px; }
+@container portada (max-width: 700px) {
   .portada .portada-objetivo { display: none; }
 }
 
