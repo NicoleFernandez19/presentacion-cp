@@ -89,6 +89,10 @@
         ],
         4
       );
+      /* Con margen auto la grilla se encoge a su contenido, y las tarjetas
+         (container-type: inline-size) no aportan ancho propio: sin width
+         quedaban de 26px y el texto se salía. */
+      datos.style.width = '100%';
       datos.style.maxWidth = '860px';
       datos.style.margin = '6px auto 0';
       caja.appendChild(datos);
