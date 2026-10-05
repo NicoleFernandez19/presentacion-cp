@@ -698,6 +698,14 @@ reunión, no para explorar datos:
   cuántas filas entran por lista y `mostrar_nombres_cajeros` en `false` muestra
   solo el legajo.
 - **Una sola presentación general** (D-15): no hay archivos por jefe zonal.
+- **Cierre rediseñado (2026-10-05).** *Hallazgos por zona* es una tabla con
+  todas las zonas (operaciones, variación, avance, % en alta, operadores/mes) y
+  debajo los textos de `textos_cierre`. *Decisiones y próximos pasos* muestra los
+  cuatro números del año y los objetivos de la red y de cada zona. Se sacó la
+  tabla vacía de acuerdos. Lo que no entra en pantallas chicas se oculta entero,
+  sin quedar cortado (`UI.recortarHijos`).
+- **Rankings con donas (2026-10-05).** Las láminas de mejores y peores cajeros
+  y locales vuelven a mostrar de qué jefe zonal es cada punta del ranking.
 
 La versión interactiva anterior, con filtros, quedó en
 `respaldo_version_interactiva/` y no se modificó.

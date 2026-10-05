@@ -86,12 +86,60 @@
     return { filas: filas.sort((a, b) => b.ops - a.ops), total: filas.length, baseVariacion: comparar ? 'interanual' : 'primer contra último trimestre' };
   }
 
+  function variacionNodo(valor) {
+    if (valor === null || valor === undefined) return UI.elemento('span', 'variacion neutra', '—');
+    const clase = valor > 0.5 ? 'sube' : valor < -0.5 ? 'baja' : 'neutra';
+    return UI.elemento('span', 'variacion ' + clase, (valor > 0.5 ? '▲ ' : valor < -0.5 ? '▼ ' : '') + F().variacion(valor));
+  }
+
+  /* Tabla de zonas del cierre: la usan «Hallazgos por zona» y, si hace falta,
+     otras láminas. Las filas se estiran para llenar el panel. */
+  function tablaZonas(ctx, filas, baseVariacion) {
+    const Datos = global.Datos;
+    const avance = new Map();
+    ctx.avancePorJefe().filas.forEach(function (f) {
+      if (f.varOpsPorOperador !== null && f.varOpsPorOperador !== undefined) avance.set(f.jefe, f.varOpsPorOperador);
+    });
+    const caja = UI.tabla({
+      columnas: [
+        { titulo: '#', num: true, render: (f, i) => UI.elemento('span', 'posicion' + (i < 3 ? ' podio' : ''), String(i + 1)) },
+        {
+          titulo: 'Jefe zonal',
+          num: false,
+          render: function (f) {
+            const celda = UI.elemento('span');
+            celda.style.cssText = 'display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#fff';
+            const punto = UI.elemento('span');
+            punto.style.cssText = 'width:10px;height:10px;border-radius:3px;background:' + Datos.colorJefe(f.jefe);
+            celda.appendChild(punto);
+            celda.appendChild(document.createTextNode(f.nombre));
+            return celda;
+          }
+        },
+        { titulo: 'Operaciones', num: true, render: (f) => F().compacto(f.ops) },
+        { titulo: 'Variación', num: true, ayuda: 'Variación ' + baseVariacion + ' de las operaciones', render: (f) => variacionNodo(f.variacion) },
+        {
+          titulo: 'Avance',
+          num: true,
+          ayuda: 'Operaciones por operador, ventana final contra inicial',
+          render: (f) => variacionNodo(avance.has(f.jefe) ? avance.get(f.jefe) : null)
+        },
+        { titulo: 'En ' + Datos.categoria('alta'), num: true, render: (f) => F().porcentaje(f.porcentajeAlta, 0) },
+        { titulo: 'Operadores/mes', num: true, render: (f) => F().entero(Math.round(f.operadores)) }
+      ],
+      filas: filas
+    });
+    const tabla = caja.querySelector('table');
+    if (tabla) tabla.style.cssText = 'height:100%;font-size:15px';
+    return caja;
+  }
+
   // ----------------------------------------------------------- Lámina 34
 
   global.Navegacion.registrar({
     seccion: SECCION,
     titulo: 'Hallazgos por zona',
-    subtitulo: 'Una tarjeta por jefe zonal con sus números del año y, si está cargado, el texto de cierre.',
+    subtitulo: 'Cómo termina cada jefe zonal: sus números del año en una tabla y, si está cargado, el texto de cierre.',
     render: function (host, ctx) {
       const Datos = global.Datos;
       if (ctx.vacio) {
@@ -116,67 +164,42 @@
       }
       const cuerpo = UI.cabecera(host, this, linea);
 
-      const grilla = UI.elemento('div');
-      const columnas = filas.length <= 6 ? 3 : filas.length <= 8 ? 4 : 5;
-      grilla.style.cssText =
-        'display:grid;gap:9px;grid-template-columns:repeat(' + columnas + ',1fr);flex-grow:1;min-height:0;overflow:hidden';
+      // Una tabla para comparar las zonas de un vistazo, ordenada por % en alta.
+      const ordenadas = filas.slice().sort((a, b) => a.posicion - b.posicion);
+      const panel = UI.panel('Cómo termina cada zona', 'ordenadas por % de cajeros en ' + Datos.categoria('alta').toLowerCase());
+      // La tabla nunca se achica por debajo de su alto natural: los textos ceden primero.
+      panel.style.flex = '1 0 auto';
+      panel.appendChild(tablaZonas(ctx, ordenadas, resumen.baseVariacion));
+      cuerpo.appendChild(panel);
 
-      filas.forEach(function (f) {
-        const tarjeta = UI.elemento('div', 'tarjeta');
-        tarjeta.style.borderLeft = '3px solid ' + Datos.colorJefe(f.jefe);
-
-        const cabecera = UI.elemento('div');
-        cabecera.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;gap:6px';
-        cabecera.appendChild(UI.elemento('div', 'rotulo', f.nombre));
-        cabecera.appendChild(UI.elemento('span', 'tenue', '#' + f.posicion + ' de ' + resumen.total));
-        tarjeta.appendChild(cabecera);
-
-        const numeros = UI.elemento('div');
-        numeros.style.cssText = 'display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 2px';
-        [
-          { rotulo: 'Operaciones', valor: F().compacto(f.ops) },
-          { rotulo: 'En ' + Datos.categoria('alta'), valor: F().porcentaje(f.porcentajeAlta) },
-          { rotulo: 'Operadores/mes', valor: F().entero(Math.round(f.operadores)) }
-        ].forEach(function (n) {
-          const caja = UI.elemento('div');
-          caja.innerHTML =
-            '<div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--texto-tenue);font-weight:700">' +
-            n.rotulo + '</div><div style="font-size:17px;font-weight:800;color:#fff">' + n.valor + '</div>';
-          numeros.appendChild(caja);
-        });
-        tarjeta.appendChild(numeros);
-
-        if (f.variacion !== null) {
-          const clase = f.variacion > 0 ? 'sube' : f.variacion < 0 ? 'baja' : 'neutra';
-          const flecha = f.variacion > 0 ? '▲' : f.variacion < 0 ? '▼' : '=';
-          tarjeta.appendChild(
-            UI.elemento('div', 'variacion ' + clase, flecha + ' ' + F().variacion(f.variacion) + ' ' + resumen.baseVariacion)
-          );
-        }
-
-        const texto = textoDe(f.jefe);
-        if (texto && texto.hallazgos) {
+      // Los textos de cierre, si están cargados, van debajo y del tamaño de su contenido.
+      const conTexto = ordenadas.filter((f) => textoDe(f.jefe) && textoDe(f.jefe).hallazgos);
+      if (conTexto.length) {
+        const grilla = UI.elemento('div');
+        const columnas = conTexto.length <= 3 ? conTexto.length : conTexto.length <= 6 ? 3 : 4;
+        grilla.style.cssText = 'display:grid;gap:9px;grid-template-columns:repeat(' + columnas + ',1fr);flex:0 1 auto;min-height:0;overflow:hidden';
+        conTexto.forEach(function (f) {
+          const tarjeta = UI.elemento('div', 'tarjeta');
+          tarjeta.style.cssText = 'border-left:3px solid ' + Datos.colorJefe(f.jefe) + ';padding:8px 12px;gap:3px';
+          tarjeta.appendChild(UI.elemento('div', 'rotulo', f.nombre));
           const parrafo = UI.elemento('div');
           parrafo.style.cssText =
-            'margin-top:6px;padding-top:6px;border-top:1px solid var(--borde);font-size:11.5px;line-height:1.45;color:var(--texto-suave)';
-          parrafo.textContent = texto.hallazgos;
+            'font-size:12.5px;line-height:1.4;color:var(--texto-suave)';
+          parrafo.textContent = textoDe(f.jefe).hallazgos;
           tarjeta.appendChild(parrafo);
-        }
-
-        grilla.appendChild(tarjeta);
-      });
-
-      cuerpo.appendChild(grilla);
+          grilla.appendChild(tarjeta);
+        });
+        cuerpo.appendChild(grilla);
+        UI.recortarHijos(grilla);
+      }
 
       const general = textoDe(-1);
       if (general && general.hallazgos) {
-        const panel = UI.panel('Hallazgos de la red');
-        panel.style.flexShrink = '0';
-        const texto = UI.elemento('div');
-        texto.style.cssText = 'font-size:13px;line-height:1.55;color:var(--texto)';
-        texto.textContent = general.hallazgos;
-        panel.appendChild(texto);
-        cuerpo.appendChild(panel);
+        const pie = UI.elemento('p', 'linea-lectura');
+        pie.style.flexShrink = '0';
+        pie.innerHTML = '<strong>En la red:</strong> ';
+        pie.appendChild(document.createTextNode(general.hallazgos));
+        cuerpo.appendChild(pie);
       }
     },
     notas: function (ctx) {
@@ -279,4 +302,5 @@
       );
     }
   });
+
 })(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -69,6 +69,12 @@
     return m.conVentana && m.red.varOperadores !== null && m.red.varOperadores < -0.5;
   }
 
+  /* La zona del fondo no siempre retrocede: si su avance es positivo, decir
+     «retrocede» con un +2% al lado se lee como un error. */
+  function verboDelUltimo(avance) {
+    return avance < -0.5 ? 'retrocede más' : 'avanza menos';
+  }
+
   // -------------------------------------------------------- títulos de acción
 
   const TITULOS = {
@@ -104,7 +110,9 @@
     'Trayectoria de cada zona': function (ctx) {
       const z = zonasPorAvance(ctx).filas;
       if (z.length < 2) return null;
-      return z[0].nombre + ' es la zona que más avanzó y ' + z[z.length - 1].nombre + ' la que más retrocedió';
+      const ultimo = z[z.length - 1];
+      return z[0].nombre + ' es la zona que más avanzó y ' + ultimo.nombre +
+        (ultimo.avance < -0.5 ? ' la que más retrocedió' : ' la que menos');
     },
     'Criterio de categorías': function () {
       return 'Cada cajero se compara solo con los de su mismo tipo de zona';
@@ -200,7 +208,7 @@
             'Zonas',
             suben + ' de ' + z.length,
             'zonas avanzan contra su propio arranque. Más avanza <strong>' + z[0].nombre + '</strong> (' +
-            F().variacion(z[0].avance) + '); más retrocede <strong>' + z[z.length - 1].nombre + '</strong> (' +
+            F().variacion(z[0].avance) + '); ' + verboDelUltimo(z[z.length - 1].avance) + ' <strong>' + z[z.length - 1].nombre + '</strong> (' +
             F().variacion(z[z.length - 1].avance) + ').'
           )
         );
@@ -240,67 +248,105 @@
   global.Navegacion.registrar({
     seccion: 'Cierre',
     titulo: 'Decisiones y próximos pasos',
-    subtitulo: 'Lo que se vio hoy y lo que se acuerda hacer, con responsable y fecha.',
-    tituloAccion: function () {
-      return 'Para acordar hoy: acciones, responsables y fechas';
+    subtitulo: 'Lo que se vio hoy y los próximos pasos de la red y de cada zona.',
+    tituloAccion: function (ctx) {
+      const m = mensajes(ctx);
+      const z = m.zonas.filas;
+      return 'Cerramos con ' + F().compacto(m.ops) + ' operaciones' +
+        (m.conVentana && m.red.varOps !== null ? ' (' + F().variacion(m.red.varOps) + ')' : '') +
+        (z.length ? ' y ' + z.filter((f) => f.avance > 0.5).length + ' de ' + z.length + ' zonas avanzando' : '');
     },
     render: function (host, ctx) {
-      const m = mensajes(ctx);
       const cuerpo = UI.cabecera(host, this, '');
-      const fila = UI.fila(true);
-
-      const izq = UI.panel('Lo que vimos');
-      izq.style.flex = '1 1 0';
-      const lista = UI.elemento('ul', 'vistos');
-      const item = function (html) {
-        const li = UI.elemento('li');
-        li.innerHTML = html;
-        lista.appendChild(li);
-      };
-      item('<strong>' + F().entero(m.ops) + '</strong> operaciones en ' + m.meses + ' meses' +
-        (m.conVentana && m.red.varOps !== null ? ', <strong>' + F().variacion(m.red.varOps) + '</strong> en la ventana final' : '') + '.');
-      if (menosGente(m)) {
-        item('Hay <strong>' + F().variacion(m.red.varOperadores) + '</strong> de operadores: la productividad por operador sube en parte por eso.');
+      if (ctx.vacio) {
+        cuerpo.appendChild(UI.vacio('Sin datos', 'No hay operaciones en el período.'));
+        return;
       }
+      const m = mensajes(ctx);
       const z = m.zonas.filas;
-      if (z.length >= 2) {
-        item('<strong>' + z[0].nombre + '</strong> avanza más (' + F().variacion(z[0].avance) + '); <strong>' +
-          z[z.length - 1].nombre + '</strong> retrocede más (' + F().variacion(z[z.length - 1].avance) + ').');
+      const Datos = global.Datos;
+      const textos = Datos.raw.textos || [];
+      const general = textos.find((t) => t.jefe === -1 && t.objetivos && t.objetivos.trim());
+      const porZona = textos.filter((t) => t.jefe >= 0 && t.objetivos && t.objetivos.trim());
+      const hayPasos = !!(general || porZona.length);
+
+      // Lo que vimos: los números del año, grandes. Sin próximos pasos cargados ocupan toda la lámina.
+      const grilla = UI.elemento('div', 'mensajes');
+      grilla.style.cssText = hayPasos ? 'grid-template-columns:repeat(4,1fr);flex:0 0 auto' : '';
+      grilla.appendChild(
+        mensaje(
+          'Volumen',
+          m.conVentana && m.red.varOps !== null ? F().variacion(m.red.varOps) : F().compacto(m.ops),
+          '<strong>' + F().entero(m.ops) + '</strong> operaciones en ' + m.meses + ' meses.'
+        )
+      );
+      if (m.conVentana && m.red.varOperadores !== null) {
+        grilla.appendChild(
+          mensaje(
+            'Gente',
+            F().variacion(m.red.varOperadores),
+            'de operadores' + (menosGente(m) ? ': la productividad por operador sube en parte por eso.' : '.'),
+            menosGente(m)
+          )
+        );
       }
       if (m.alta.valor !== null) {
-        item('<strong>' + F().porcentaje(m.alta.valor, 0) + '</strong> de los cajeros está en productividad alta.');
+        grilla.appendChild(
+          mensaje('Productividad', F().porcentaje(m.alta.valor, 0), 'de los cajeros está en productividad alta.')
+        );
       }
-      izq.appendChild(lista);
-      fila.appendChild(izq);
-
-      const der = UI.panel('Lo que acordamos');
-      der.style.flex = '1.3 1 0';
-      const textos = global.Datos.raw.textos || [];
-      const general = textos.find((t) => t.jefe === -1 && t.objetivos && t.objetivos.trim());
-      if (general) {
-        const objetivos = UI.elemento('div');
-        objetivos.style.cssText = 'font-size:14px;line-height:1.5;color:var(--texto);margin-bottom:8px';
-        objetivos.textContent = general.objetivos;
-        der.appendChild(objetivos);
+      if (z.length >= 2) {
+        const ultimo = z[z.length - 1];
+        grilla.appendChild(
+          mensaje(
+            'Zonas',
+            z.filter((f) => f.avance > 0.5).length + ' de ' + z.length,
+            'avanzan. Más avanza <strong>' + z[0].nombre + '</strong> (' + F().variacion(z[0].avance) + '); ' +
+            verboDelUltimo(ultimo.avance) + ' <strong>' + ultimo.nombre + '</strong> (' + F().variacion(ultimo.avance) + ').',
+            ultimo.avance < -0.5
+          )
+        );
       }
-      const tabla = UI.elemento('table', 'acuerdos');
-      tabla.innerHTML = '<thead><tr><th>Acción</th><th style="width:22%">Responsable</th><th style="width:16%">Fecha</th></tr></thead>';
-      const cuerpoTabla = UI.elemento('tbody');
-      for (let i = 0; i < 4; i++) cuerpoTabla.appendChild(UI.elemento('tr')).innerHTML = '<td></td><td></td><td></td>';
-      tabla.appendChild(cuerpoTabla);
-      der.appendChild(tabla);
-      fila.appendChild(der);
+      cuerpo.appendChild(grilla);
 
-      cuerpo.appendChild(fila);
+      // Próximos pasos: solo lo que trae textos_cierre. Nunca una tabla vacía.
+      if (hayPasos) {
+        const panel = UI.panel('Próximos pasos');
+        panel.style.flex = '1 1 auto';
+        panel.style.minHeight = '0';
+        if (general) {
+          const red = UI.elemento('div');
+          red.style.cssText = 'font-size:clamp(15px,2vh,20px);flex-shrink:0;line-height:1.5;color:#fff;border-left:3px solid var(--amarillo);padding:4px 0 4px 14px;margin:4px 0 10px';
+          red.textContent = general.objetivos;
+          panel.appendChild(red);
+        }
+        if (porZona.length) {
+          const lista = UI.elemento('div');
+          lista.style.cssText = 'display:grid;gap:8px 18px;grid-template-columns:repeat(' + (porZona.length > 4 ? 2 : 1) + ',1fr);align-content:space-evenly;flex:1 1 auto;min-height:0;overflow:hidden';
+          porZona.forEach(function (t) {
+            const item = UI.elemento('div');
+            item.style.cssText = 'font-size:clamp(13px,1.6vh,16px);line-height:1.45;color:var(--texto);border-left:3px solid ' + Datos.colorJefe(t.jefe) + ';padding-left:10px';
+            const nombre = UI.elemento('strong', null, Datos.jefe(t.jefe) + ': ');
+            nombre.style.color = '#fff';
+            item.appendChild(nombre);
+            item.appendChild(document.createTextNode(t.objetivos));
+            lista.appendChild(item);
+          });
+          panel.appendChild(lista);
+        }
+        cuerpo.appendChild(panel);
+        const listaPasos = panel.lastChild;
+        if (porZona.length && listaPasos) UI.recortarHijos(listaPasos);
+      }
     },
     notas: function () {
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
-        '<div class="guion">"Cerramos con lo que nos llevamos: qué acción toma cada zona, quién la lleva y para cuándo. ' +
-        'Lo anotamos acá, antes de salir."</div></div>' +
-        '<div class="bloque"><h4>Cómo usarla</h4>' +
-        '<p>La tabla de la derecha se completa durante la reunión (o se prepara antes). Si la tabla ' +
-        '<code>textos_cierre</code> trae los objetivos de la red, aparecen arriba de la tabla.</p></div>'
+        '<div class="guion">"Cerramos con lo que nos llevamos: los cuatro números del año y lo que hace cada zona ' +
+        'a partir de ahora."</div></div>' +
+        '<div class="bloque"><h4>De dónde salen los próximos pasos</h4>' +
+        '<p>Los objetivos de la red y de cada zona salen de <code>textos_cierre</code>. Si no está cargada, ' +
+        'la lámina muestra solo los números del año.</p></div>'
       );
     }
   });
