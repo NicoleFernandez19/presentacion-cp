@@ -61,6 +61,9 @@ Propio. `conexion.ini` está excluido del control de versiones.
 
 **Lo único que no sale de la base** es la asignación de locales a jefes zonales:
 vive en `data/maestros/zonales.csv` y se mantiene a mano.
+Ese archivo no se versiona (tiene nombres reales; está en `.gitignore`). Para
+armarlo en otro equipo, copiá el de `Dashboard Canal Propio\Data\zonales\zonales.csv`
+(columnas `ID AGENTE`, `JEFE ZONAL`, `REGION`, `PROVINCIA`) a `data/maestros/`.
 
 ### Con datos reales, desde la carpeta del dashboard
 
@@ -200,7 +203,7 @@ src/js/
   graficos.js                   Tema y helpers de ECharts
   filtros.js                    Estado fijo de la reunión (sin barra de filtros)
   navegacion.js                 Láminas, notas, proyección, detalle e impresión
-  vistas-*.js                   Las 38 láminas, una sección por archivo
+  vistas-*.js                   Las láminas (se presentan las que lista config.json), una sección por archivo
   app.js                        Arranque
 tests/metricas.test.js          Pruebas del motor
 ```

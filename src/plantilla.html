@@ -46,7 +46,7 @@
       <svg width="14" height="14"><use href="#ico-imprimir"/></svg><span>Imprimir</span>
     </button>
     <button id="btn-toggle-notes" class="boton" onclick="toggleNotesPanel()" aria-label="Alternar panel de notas">
-      <svg width="14" height="14"><use href="#ico-notas"/></svg><span id="txt-toggle-notes">Mostrar Notas</span>
+      <svg width="14" height="14"><use href="#ico-notas"/></svg><span id="txt-toggle-notes">Ocultar Notas</span>
     </button>
     <button class="boton boton-primario" onclick="toggleFullscreen()" aria-label="Pantalla completa">
       <svg width="14" height="14" id="ico-pantalla"><use href="#ico-expandir"/></svg><span id="txt-fullscreen">Pantalla Completa</span>
@@ -55,6 +55,11 @@
 </header>
 
 <div class="cuerpo">
+  <aside id="sidebar" class="no-imprimir">
+    <div class="titulo-panel" id="sidebar-titulo">Temario</div>
+    <nav id="sidebar-nav" aria-label="Temario de la presentación"></nav>
+  </aside>
+
   <main class="escenario">
     <div id="slide-frame">
       <div class="brillo"></div>
@@ -67,12 +72,12 @@
     </div>
     <div class="controles no-imprimir">
       <button class="boton-redondo" onclick="prevSlide()" aria-label="Lámina anterior"><svg width="17" height="17"><use href="#ico-izq"/></svg></button>
-      <span class="pista">Flechas del teclado o Av Pág / Re Pág · <strong>F</strong> pantalla completa</span>
+      <span class="pista">Flechas, Espacio o Av Pág / Re Pág · <strong>F</strong> pantalla completa · <strong>N</strong> notas · deslizar en pantalla táctil</span>
       <button class="boton-redondo" onclick="nextSlide()" aria-label="Lámina siguiente"><svg width="17" height="17"><use href="#ico-der"/></svg></button>
     </div>
   </main>
 
-  <section id="notes-panel" class="oculto">
+  <section id="notes-panel">
     <div class="cabecera">
       <div style="display:flex;align-items:center;gap:8px">
         <svg width="15" height="15" style="color:var(--amarillo)"><use href="#ico-libro"/></svg>

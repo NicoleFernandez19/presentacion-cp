@@ -72,12 +72,9 @@
      Con más de siete jefes distintos la torta queda al límite de lo legible; lo
      que la sostiene es la leyenda, que nombra a todos. Si alguna vez incomoda,
      el reemplazo natural es una barra horizontal. */
-  function filaDonasPorJefe(grupos, unidad) {
+  function panelDonaPorJefe(conf, unidad, lateral) {
     const Datos = global.Datos;
-    const filaDonas = UI.fila();
-    filaDonas.style.flexShrink = '0';
-
-    grupos.forEach(function (conf) {
+    {
       const porJefe = new Map();
       conf.lista.forEach(function (x) {
         porJefe.set(conf.jefeDe(x), (porJefe.get(conf.jefeDe(x)) || 0) + 1);
@@ -96,9 +93,12 @@
       panel.style.flex = '1 1 0';
       panel.style.borderTop = '2px solid ' + conf.color;
       const caja = UI.grafico(panel);
-      caja.style.flexGrow = '0';
-      caja.style.height = '150px';
-      filaDonas.appendChild(panel);
+      /* Lateral: la dona ocupa el alto de la lámina, al costado de la tabla, y la
+         leyenda va abajo. Apilada: una fila baja con la leyenda a la derecha. */
+      if (!lateral) {
+        caja.style.flexGrow = '0';
+        caja.style.height = '150px';
+      }
 
       const etiqueta = new Map();
       reparto.forEach(function (e) {
@@ -115,8 +115,10 @@
           show: true,
           type: 'scroll',
           orient: 'vertical',
-          right: 6,
-          top: 'middle',
+          right: lateral ? 'auto' : 6,
+          left: lateral ? 'center' : 'auto',
+          bottom: lateral ? 0 : 'auto',
+          top: lateral ? 'auto' : 'middle',
           itemWidth: 10,
           itemHeight: 10,
           itemGap: 6,
@@ -134,8 +136,8 @@
         series: [
           {
             type: 'pie',
-            radius: ['46%', '74%'],
-            center: ['21%', '50%'],
+            radius: lateral ? ['34%', '60%'] : ['46%', '74%'],
+            center: lateral ? ['50%', '34%'] : ['21%', '50%'],
             minAngle: 6,
             // 2 px de superficie entre porciones, para que no se toquen
             itemStyle: { borderColor: '#0f121d', borderWidth: 2, borderRadius: 3 },
@@ -158,8 +160,16 @@
           if (p.data && p.data.jefe !== undefined) global.Filtros.alternar('jefes', p.data.jefe);
         });
       }
-    });
+      return panel;
+    }
+  }
 
+  function filaDonasPorJefe(grupos, unidad) {
+    const filaDonas = UI.fila();
+    filaDonas.style.flexShrink = '0';
+    grupos.forEach(function (conf) {
+      filaDonas.appendChild(panelDonaPorJefe(conf, unidad, false));
+    });
     return filaDonas;
   }
 
@@ -301,60 +311,59 @@
       );
     }
   });
-  /* Mejores y peores cajeros, con la misma estructura que la de locales: las
-     dos puntas enfrentadas y, abajo, de qué zona es cada una. Las láminas de
-     «Top cajeros» y «Cajeros con menor productividad» muestran las mismas dos
-     listas por separado; esta las pone juntas para poder compararlas de un
-     vistazo. El IP es el del recorte (D-28). */
-  global.Navegacion.registrar({
-    seccion: SECCION,
-    titulo: 'Mejores y peores cajeros',
-    subtitulo: 'Las dos puntas del ranking de cajeros enfrentadas, y de qué zona es cada una.',
-    render: function (host, ctx) {
-      if (ctx.vacio) return vacio(host, this);
-      const Datos = global.Datos;
-      const config = Datos.config;
-      const base = conIpDelRecorte(ctx.metricasCajeros().filter((m) => m.suficiente && m.ops > 0));
-      if (!base.length) {
-        return vacio(host, this, 'Ningún cajero del recorte llega al mínimo de ' +
-          config.productividad.minimo_meses_activos + ' meses activos con operaciones.');
-      }
+  /* Cajeros: una lámina por punta del ranking. A la izquierda la lista completa
+     (config.rankings.cajeros_mejores / cajeros_peores) y al costado una dona con
+     de qué jefe zonal es cada uno. Así el top 20 se lee entero y el reparto por
+     zona queda al lado, en vez de apretar las dos puntas en una sola lámina.
+     El IP es el del recorte (D-28). */
+  function laminaCajeros(conf) {
+    function base(ctx) {
+      const lista = conIpDelRecorte(ctx.metricasCajeros().filter((m) => m.suficiente && m.ops > 0));
+      if (!lista.length) return null;
+      const ordenados = ordenar(lista, global.Datos.config.rankings.modo_por_defecto || 'relativo');
+      const n = global.Datos.config.rankings[conf.clave];
+      return {
+        total: lista.length,
+        elegidos: conf.mejores ? ordenados.slice(0, n) : ordenados.slice(-n).reverse()
+      };
+    }
 
-      const modo = config.rankings.modo_por_defecto || 'relativo';
-      const ordenados = ordenar(base, modo);
-      const mejores = ordenados.slice(0, filasPorLista());
-      const peores = ordenados.slice(-filasPorLista()).reverse();
-      const topeIp = ordenados.length ? ordenados[0].ipRecorte : 0;
-      const decimalesIp = topeIp < 10 ? 2 : topeIp < 100 ? 1 : 0;
+    global.Navegacion.registrar({
+      seccion: SECCION,
+      titulo: conf.titulo,
+      subtitulo: conf.subtitulo,
+      render: function (host, ctx) {
+        if (ctx.vacio) return vacio(host, this);
+        const Datos = global.Datos;
+        const config = Datos.config;
+        const datos = base(ctx);
+        if (!datos) {
+          return vacio(host, this, 'Ningún cajero del recorte llega al mínimo de ' +
+            config.productividad.minimo_meses_activos + ' meses activos con operaciones.');
+        }
+        const lista = datos.elegidos;
+        const tope = lista[0].ipRecorte;
+        const decimalesIp = tope < 10 ? 2 : tope < 100 ? 1 : 0;
 
-      let linea =
-        '<strong>' + Datos.cajero(mejores[0].cajero) + '</strong> encabeza con <strong>' +
-        F().decimal(mejores[0].ipRecorte, decimalesIp) + '</strong> operaciones por mes activo, contra ' +
-        F().decimal(peores[0].ipRecorte, decimalesIp) + ' de <strong>' + Datos.cajero(peores[0].cajero) +
-        '</strong>.';
+        const cuerpo = UI.cabecera(
+          host,
+          this,
+          '<strong>' + Datos.cajero(lista[0].cajero) + '</strong> ' + conf.verbo + ' con <strong>' +
+            F().decimal(lista[0].ipRecorte, decimalesIp) + '</strong> operaciones por mes activo.'
+        );
+        const fila = UI.fila(true);
 
-      if (peores[0].ipRecorte > 0) {
-        this.tituloActual = 'El cajero que más rinde opera ' + F().decimal(mejores[0].ipRecorte / peores[0].ipRecorte, 1) +
-          ' veces por mes lo que el que menos';
-      }
-      const cuerpo = UI.cabecera(host, this, linea);
-      const fila = UI.fila(true);
-
-      [
-        { titulo: 'Mejores cajeros', lista: mejores, color: Datos.color('positivo'), podio: true },
-        { titulo: 'Cajeros con menor IP', lista: peores, color: Datos.color('negativo'), podio: false }
-      ].forEach(function (conf) {
-        const panel = UI.panel(conf.titulo, 'por IP, sobre ' + F().entero(base.length) + ' cajeros con datos suficientes');
-        panel.style.flex = '1 1 0';
-        panel.style.borderTop = '2px solid ' + conf.color;
-        panel.appendChild(
+        const panelLista = UI.panel(conf.panel, 'por IP, sobre ' + F().entero(datos.total) + ' cajeros con datos suficientes');
+        panelLista.style.flex = '3 1 0';
+        panelLista.style.borderTop = '2px solid ' + global.Datos.color(conf.color);
+        panelLista.appendChild(
           UI.tabla({
             ordenable: false,
             columnas: [
               {
                 titulo: '#',
                 num: true,
-                render: (f, i) => UI.elemento('span', 'posicion' + (conf.podio && i < 3 ? ' podio' : ''), String(i + 1))
+                render: (f, i) => UI.elemento('span', 'posicion' + (conf.mejores && i < 3 ? ' podio' : ''), String(i + 1))
               },
               { titulo: 'Cajero', num: false, render: (f) => Datos.cajero(f.cajero) },
               { titulo: 'Local', num: false, render: (f) => Datos.local(f.local) },
@@ -375,68 +384,69 @@
                 }
               }
             ],
-            filas: conf.lista
+            filas: lista
           })
         );
-        fila.appendChild(panel);
-      });
+        panelLista.classList.add('tabla-compacta');
+        fila.appendChild(panelLista);
 
-      cuerpo.appendChild(fila);
+        const dona = panelDonaPorJefe(
+          { titulo: 'De qué zona son', lista: lista, color: global.Datos.color(conf.color), jefeDe: (m) => jefeDe(m.local) },
+          'cajeros',
+          true
+        );
+        dona.style.flex = '1.2 1 0';
+        fila.appendChild(dona);
 
-      /* Las donas cuentan el ranking completo de config.rankings, no solo las
-         filas que entran en la tabla. */
-      cuerpo.appendChild(
-        filaDonasPorJefe(
-          [
-            {
-              titulo: 'De quién son los mejores',
-              lista: ordenados.slice(0, config.rankings.cajeros_mejores),
-              color: Datos.color('positivo'),
-              jefeDe: (m) => jefeDe(m.local)
-            },
-            {
-              titulo: 'De quién son los de menor IP',
-              lista: ordenados.slice(-config.rankings.cajeros_peores),
-              color: Datos.color('negativo'),
-              jefeDe: (m) => jefeDe(m.local)
-            }
-          ],
-          'cajeros'
-        )
-      );
-    },
-    notas: function (ctx) {
-      const Datos = global.Datos;
-      const config = Datos.config;
-      const base = conIpDelRecorte(ctx.metricasCajeros().filter((m) => m.suficiente && m.ops > 0));
-      if (!base.length) return '';
-      const ordenados = ordenar(base, config.rankings.modo_por_defecto || 'relativo');
-      const jefesArriba = new Set(ordenados.slice(0, config.rankings.cajeros_mejores).map((m) => jefeDe(m.local)));
-      const jefesAbajo = new Set(
-        ordenados.slice(-config.rankings.cajeros_peores).map((m) => jefeDe(m.local))
-      );
-      const enLasDos = Array.from(jefesArriba).filter((j) => jefesAbajo.has(j));
-      return (
-        '<div class="bloque"><h4>Guión para el orador</h4>' +
-        '<div class="guion">"Las dos puntas juntas, y abajo de quién es cada una. Si una zona aparece ' +
-        'en las dos donas no es una contradicción: quiere decir que adentro de esa zona hay mucha ' +
-        'distancia entre sus locales, que es donde está la diferencia de esta red."</div></div>' +
-        '<div class="bloque"><h4>Cómo se lee</h4>' +
-        '<p>El orden es <strong>' +
-        (config.rankings.modo_por_defecto === 'absoluto' ? 'absoluto' : 'relativo') +
-        '</strong>. Quedan afuera los cajeros que no ' +
-        'llegan a ' + config.productividad.minimo_meses_activos + ' meses activos y los que no tienen ' +
-        'ninguna operación en el recorte.</p>' +
-        '<p>Un puesto bajo acá <strong>no es una conclusión sobre la persona</strong>: dentro de un mismo ' +
-        'local todos rinden parecido, así que buena parte de esta distancia es el local donde atiende ' +
-        'cada uno.</p></div>' +
-        '<div class="bloque"><h4>Datos</h4><ul>' +
-        '<li>Cajeros comparables: <span class="dato">' + F().entero(base.length) + '</span></li>' +
-        '<li>Zonas en las dos puntas: <span class="dato">' + F().entero(enLasDos.length) + '</span> de ' +
-        F().entero(Datos.raw.dim.jefes.length) + '</li>' +
-        '</ul></div>'
-      );
-    }
+        cuerpo.appendChild(fila);
+      },
+      notas: function (ctx) {
+        const Datos = global.Datos;
+        const config = Datos.config;
+        const datos = base(ctx);
+        if (!datos) return '';
+        const zonas = new Set(datos.elegidos.map((m) => jefeDe(m.local)));
+        return (
+          '<div class="bloque"><h4>Guión para el orador</h4>' +
+          '<div class="guion">"' + conf.guion + '"</div></div>' +
+          '<div class="bloque"><h4>Cómo se lee</h4>' +
+          '<p>El orden es <strong>' +
+          (config.rankings.modo_por_defecto === 'absoluto' ? 'absoluto' : 'relativo') +
+          '</strong>. Quedan afuera los cajeros que no llegan a ' + config.productividad.minimo_meses_activos +
+          ' meses activos y los que no tienen ninguna operación en el recorte.</p>' +
+          '<p>Un puesto acá <strong>no es una conclusión sobre la persona</strong>: dentro de un mismo ' +
+          'local todos rinden parecido, así que buena parte de esta distancia es el local donde atiende ' +
+          'cada uno.</p></div>' +
+          '<div class="bloque"><h4>Datos</h4><ul>' +
+          '<li>Cajeros comparables: <span class="dato">' + F().entero(datos.total) + '</span></li>' +
+          '<li>Zonas en esta lista: <span class="dato">' + F().entero(zonas.size) + '</span> de ' +
+          F().entero(Datos.raw.dim.jefes.length) + '</li>' +
+          '</ul></div>'
+        );
+      }
+    });
+  }
+
+  laminaCajeros({
+    clave: 'cajeros_mejores',
+    mejores: true,
+    titulo: 'Mejores cajeros',
+    subtitulo: 'Los cajeros con mayor IP de la red y de qué zona es cada uno.',
+    panel: 'Mejores cajeros',
+    verbo: 'encabeza',
+    color: 'positivo',
+    guion: 'Estos son los que más rinden. A la derecha, de quién es cada uno: si una zona se lleva buena parte de la lista, ahí hay algo que vale la pena copiar.'
+  });
+
+  laminaCajeros({
+    clave: 'cajeros_peores',
+    mejores: false,
+    titulo: 'Cajeros con menor IP',
+    subtitulo: 'Los cajeros con menor IP de la red y de qué zona es cada uno.',
+    panel: 'Cajeros con menor IP',
+    verbo: 'cierra la lista',
+    color: 'negativo',
+    guion: 'Estos son los que menos operan por mes activo. A la derecha, de quién es cada uno. Si una zona aparece en las dos listas, quiere decir que adentro de esa zona hay mucha distancia entre sus locales.'
   });
 
 })(typeof globalThis !== 'undefined' ? globalThis : this);

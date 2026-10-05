@@ -379,8 +379,26 @@
         .map((e) => e.lamina);
     },
 
-    /* Sin temario lateral: se recorre con las flechas. */
-    initSidebar: function () {},
+    /* Temario lateral: un botón por lámina visible, agrupado por sección. */
+    initSidebar: function () {
+      const nav = document.getElementById('sidebar-nav');
+      if (!nav) return;
+      const visibles = Navegacion.laminasVisibles();
+      document.getElementById('sidebar-titulo').textContent = 'Temario (' + visibles.length + ' láminas)';
+      nav.innerHTML = '';
+      let seccion = null;
+      visibles.forEach(function (lamina, indice) {
+        if (lamina.seccion && lamina.seccion !== seccion) {
+          seccion = lamina.seccion;
+          nav.appendChild(UI.elemento('div', 'nav-seccion', seccion));
+        }
+        const boton = UI.elemento('button', 'nav-item' + (indice === Navegacion.indiceActual ? ' activo' : ''));
+        boton.appendChild(UI.elemento('span', 'numero', String(indice + 1)));
+        boton.appendChild(UI.elemento('span', null, lamina.titulo));
+        boton.onclick = function () { Navegacion.goToSlide(indice); };
+        nav.appendChild(boton);
+      });
+    },
 
     renderSlide: function () {
       const visibles = Navegacion.laminasVisibles();
@@ -420,6 +438,7 @@
       document.getElementById('slide-progress-bar').style.width =
         ((Navegacion.indiceActual + 1) / visibles.length) * 100 + '%';
 
+      Navegacion.initSidebar();
       global.Filtros.escribirUrl();
       requestAnimationFrame(function () {
         viewport.classList.remove('transicion');
@@ -602,7 +621,7 @@
 
     conectarEventos: function () {
       document.addEventListener('keydown', function (evento) {
-        if (evento.key === 'ArrowRight' || evento.key === 'PageDown') {
+        if (evento.key === 'ArrowRight' || evento.key === 'PageDown' || evento.key === ' ') {
           Navegacion.nextSlide();
           evento.preventDefault();
         } else if (evento.key === 'ArrowLeft' || evento.key === 'PageUp') {
@@ -614,8 +633,23 @@
           Navegacion.goToSlide(Navegacion.laminasVisibles().length - 1);
         } else if (evento.key === 'f' || evento.key === 'F') {
           Navegacion.toggleFullscreen();
+        } else if (evento.key === 'n' || evento.key === 'N') {
+          Navegacion.toggleNotesPanel();
         }
       });
+
+      let toqueX = null;
+      document.addEventListener('touchstart', function (evento) {
+        toqueX = evento.changedTouches[0].clientX;
+      }, { passive: true });
+      document.addEventListener('touchend', function (evento) {
+        if (toqueX === null) return;
+        const delta = evento.changedTouches[0].clientX - toqueX;
+        toqueX = null;
+        if (Math.abs(delta) < 50) return;
+        if (delta < 0) Navegacion.nextSlide();
+        else Navegacion.prevSlide();
+      }, { passive: true });
 
       const alCambiarPantalla = function () {
         const activo = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);

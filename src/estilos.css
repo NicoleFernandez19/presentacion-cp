@@ -848,3 +848,7 @@ main.escenario { overflow: hidden; }
 .acuerdos td { height: 46px; padding: 6px 10px; border-bottom: 1px dashed var(--borde); font-size: 14px; color: var(--texto); }
 .vistos { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.45; color: var(--texto); }
 .vistos strong { color: var(--amarillo); }
+
+/* Listas largas (top 20): filas más bajas para que entren sin scroll. */
+#slide-frame .tabla-compacta table.tabla td { padding: 2px 8px; }
+#slide-frame .tabla-compacta table.tabla th { padding: 4px 8px; }
