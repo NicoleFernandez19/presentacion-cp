@@ -922,3 +922,7 @@ main.escenario { overflow: hidden; }
 /* Listas largas (top 20): filas más bajas para que entren sin scroll. */
 #slide-frame .tabla-compacta table.tabla td { padding: 2px 8px; }
 #slide-frame .tabla-compacta table.tabla th { padding: 4px 8px; }
+#slide-frame .tabla-locales table.tabla td { padding: 1px 8px; }
+#slide-frame .tabla-locales .posicion { height: 19px; }
+/* El nombre del local cede ancho antes que las columnas de números. */
+#slide-frame .tabla-locales table.tabla td:nth-child(2) { max-width: 0; width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

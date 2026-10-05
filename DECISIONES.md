@@ -426,7 +426,7 @@ moverse y el arreglo no serviría para nada.
 está calculado con las operaciones del recorte, no con todas las del año».
 
 **Alcance:** solo los dos rankings de cajeros. *Mayor mejora del año* y
-*Mejores y peores locales* quedan como estaban.
+las láminas de locales quedan como estaban.
 
 ## 2. Contradicciones entre la skill y el requerimiento
 
@@ -694,8 +694,7 @@ reunión, no para explorar datos:
   lo que no entra; las notas del orador se pueden seguir desplazando con la
   rueda, sin barra. Los botones que alternaban vistas quedan ocultos.
 - **Guion fijo.** Las láminas que se presentan y su orden están en
-  `config.json` → `presentacion.laminas` (14 láminas). `filas_ranking` fija
-  cuántas filas entran por lista y `mostrar_nombres_cajeros` en `false` muestra
+  `config.json` → `presentacion.laminas` (16 láminas). `mostrar_nombres_cajeros` en `false` muestra
   solo el legajo.
 - **Excepción: tipo de operación.** Por pedido posterior de la usuaria hay
   botones dentro de la lámina, en su esquina superior derecha (visibles en pantalla completa), (Todos, SF2 sin TEC, MT, TEC) que filtran
@@ -709,6 +708,12 @@ reunión, no para explorar datos:
   sin quedar cortado (`UI.recortarHijos`).
 - **Rankings con donas (2026-10-05).** Las láminas de mejores y peores cajeros
   y locales vuelven a mostrar de qué jefe zonal es cada punta del ranking.
+- **Una lámina por punta del ranking (2026-10-05).** Cajeros y locales se
+  separaron en dos láminas cada uno: *Mejores cajeros* / *Cajeros con menor IP*
+  y *Mejores locales* / *Locales con menor IP*. Cada lámina muestra la lista
+  completa de `config.rankings` (20 cajeros, 10 locales) y al costado una dona
+  con de qué jefe zonal es cada uno. Ya no hace falta `filas_ranking`, que se
+  quitó de `config.json`.
 
 La versión interactiva anterior, con filtros, quedó en
 `respaldo_version_interactiva/` y no se modificó.
