@@ -106,7 +106,7 @@
           confine: true
         },
         legend: {
-          type: 'plain',
+          type: 'scroll',
           top: 0,
           itemWidth: 11,
           itemHeight: 11,
@@ -271,7 +271,6 @@
           min: min,
           max: max,
           calculable: false,
-          show: false,
           orient: 'horizontal',
           right: 4,
           top: 0,
@@ -294,7 +293,6 @@
           min: -limite,
           max: limite,
           calculable: false,
-          show: false,
           orient: 'horizontal',
           right: 4,
           top: 0,

@@ -164,13 +164,13 @@ operación y la paleta. **La paleta está validada** para fondo oscuro y daltoni
 ## Cómo se usa la presentación
 
 Es una sola presentación para toda la red, pensada para proyectar en la reunión
-(D-29). No tiene filtros, ni botones que cambien la vista, ni deslizadores, ni
-flechas en pantalla: muestra las láminas que lista `config.json` →
+(D-29). No tiene filtros, ni botones que cambien la vista, ni barras de
+desplazamiento: muestra las láminas que lista `config.json` →
 `presentacion.laminas`, en ese orden.
 
-- **Teclado:** flechas y Av Pág / Re Pág para avanzar y retroceder (sirve un
-  puntero de presentación), Inicio y Fin para ir a los extremos, `F` para
-  pantalla completa.
+- **Navegación:** las flechas de abajo de la lámina, o el teclado: flechas y
+  Av Pág / Re Pág (sirve un puntero de presentación), Inicio y Fin para ir a
+  los extremos, `F` para pantalla completa.
 - **Notas del orador:** el botón *Mostrar Notas* abre la guía de cada lámina.
 - **PDF:** el botón *Imprimir* arma todas las láminas, una por página.
 

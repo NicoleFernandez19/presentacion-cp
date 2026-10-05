@@ -406,6 +406,8 @@
 
       document.getElementById('slide-number').textContent =
         'Lámina ' + (Navegacion.indiceActual + 1) + ' de ' + visibles.length;
+      document.getElementById('slide-progress-bar').style.width =
+        ((Navegacion.indiceActual + 1) / visibles.length) * 100 + '%';
 
       global.Filtros.escribirUrl();
       requestAnimationFrame(function () {

@@ -113,7 +113,7 @@
            ocupa la mitad de alto y le deja la tabla entera a la lámina. */
         legend: {
           show: true,
-          type: 'plain',
+          type: 'scroll',
           orient: 'vertical',
           right: 6,
           top: 'middle',

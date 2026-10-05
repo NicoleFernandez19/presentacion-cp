@@ -681,19 +681,18 @@ Sin servicios externos, sin telemetría, sin logs con datos de cajeros. El repor
 de validación (`dist/validacion.txt`) referencia **IDs**, nunca nombres. Los
 archivos reales viven en `data/entrada/`, excluida del control de versiones.
 
-### D-29 — Modo reunión: sin filtros, sin deslizadores, una sola presentación
+### D-29 — Modo reunión: sin filtros, sin barras de desplazamiento, una sola presentación
 
 **Decisión de la usuaria (2026-10-05).** La presentación es para proyectar en la
-reunión, no para explorar datos, así que se recorre solo con el teclado:
+reunión, no para explorar datos:
 
 - **Sin filtros.** No hay barra de filtros ni clics que filtren desde un gráfico;
   todo se muestra con el estado inicial (año completo, toda la red). Esto deja
   sin efecto la parte interactiva de §5 del requerimiento y de D-28.
-- **Sin deslizadores ni controles en pantalla.** Se sacaron la barra de escala de
-  los mapas de calor (el valor ya está escrito en cada celda), las leyendas con
-  flechas para desplazarse, la barra de progreso y las flechas de
-  anterior/siguiente debajo de la lámina. Los botones que alternaban vistas
-  quedan ocultos y las tablas no tienen scroll.
+- **Sin barras de desplazamiento.** Ningún elemento muestra barra de scroll
+  (`estilos.css`, bloque *scrollbars*). Las láminas, tablas y paneles recortan
+  lo que no entra; las notas del orador se pueden seguir desplazando con la
+  rueda, sin barra. Los botones que alternaban vistas quedan ocultos.
 - **Guion fijo.** Las láminas que se presentan y su orden están en
   `config.json` → `presentacion.laminas` (14 láminas). `filas_ranking` fija
   cuántas filas entran por lista y `mostrar_nombres_cajeros` en `false` muestra
