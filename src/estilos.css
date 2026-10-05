@@ -520,6 +520,7 @@ main.escenario {
 }
 
 .tarjeta .rotulo {
+  line-height: 1.35;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -864,6 +865,34 @@ main.escenario { overflow: hidden; }
 
 #slide-frame .tabla-caja { overflow: hidden; }
 #slide-frame .lamina-cuerpo, #slide-frame .panel { overflow: hidden; }
+
+/* Portada. La lámina es 16:9, así que su ancho alcanza para escalar todo:
+   los tamaños se calculan contra el ancho de la portada (cqi) con el diseño
+   original como tope, y en ventanas chicas o con notas y temario abiertos el
+   contenido se achica en lugar de salirse del marco. */
+.portada {
+  container: portada / inline-size;
+  flex-grow: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(6px, 1.35cqi, 16px);
+  /* Deja libre la franja del selector de tipo de operación. */
+  padding-top: 30px;
+  text-align: center;
+}
+.portada .portada-rotulo { font-size: clamp(8.5px, 0.95cqi, 11px); letter-spacing: 2.5px; text-transform: uppercase; font-weight: 800; color: var(--amarillo); }
+.portada .portada-titulo { font-size: clamp(20px, 3.7cqi, 44px); line-height: 1.1; color: #fff; font-weight: 800; margin: 0; }
+.portada .portada-periodo { font-size: clamp(12px, 1.45cqi, 17px); color: var(--texto); }
+.portada .portada-objetivo { max-width: 74ch; margin: 0 auto; color: var(--texto-suave); font-size: clamp(11px, 1.25cqi, 14.5px); line-height: 1.5; }
+/* Con margen auto la grilla se encoge a su contenido, y las tarjetas
+   (container-type: inline-size) no aportan ancho propio: sin width quedan de
+   26px y el texto se sale. */
+.portada .portada-datos { width: 100%; max-width: 860px; margin: clamp(0px, 0.5cqi, 6px) auto 0; }
+@container portada (max-width: 600px) {
+  .portada .portada-objetivo { display: none; }
+}
 
 /* Resumen ejecutivo y decisiones */
 .mensajes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; flex-grow: 1; min-height: 0; }

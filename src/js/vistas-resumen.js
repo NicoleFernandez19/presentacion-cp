@@ -53,26 +53,21 @@
       const meta = global.Datos.raw.meta;
       const ind = indicadores(ctx);
 
-      const caja = UI.elemento('div');
-      caja.style.cssText = 'flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:16px;text-align:center';
+      const caja = UI.elemento('div', 'portada');
 
-      const rotulo = UI.elemento('div');
-      rotulo.style.cssText = 'font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:800;color:var(--amarillo)';
+      const rotulo = UI.elemento('div', 'portada-rotulo');
       rotulo.textContent = config.presentacion.subtitulo;
       caja.appendChild(rotulo);
 
-      const titulo = UI.elemento('h2');
-      titulo.style.cssText = 'font-size:44px;line-height:1.1;color:#fff;font-weight:800';
+      const titulo = UI.elemento('h2', 'portada-titulo');
       titulo.innerHTML = config.presentacion.titulo.replace(/(\S+)$/, '<span style="color:var(--amarillo)">$1</span>');
       caja.appendChild(titulo);
 
-      const periodo = UI.elemento('div');
-      periodo.style.cssText = 'font-size:17px;color:var(--texto)';
+      const periodo = UI.elemento('div', 'portada-periodo');
       periodo.textContent = F().capitalizar(F().rangoPeriodos(ctx.periodos));
       caja.appendChild(periodo);
 
-      const objetivo = UI.elemento('p');
-      objetivo.style.cssText = 'max-width:74ch;margin:0 auto;color:var(--texto-suave);font-size:14.5px;line-height:1.6';
+      const objetivo = UI.elemento('p', 'portada-objetivo');
       objetivo.textContent = config.presentacion.objetivo_reunion;
       caja.appendChild(objetivo);
 
@@ -89,12 +84,7 @@
         ],
         4
       );
-      /* Con margen auto la grilla se encoge a su contenido, y las tarjetas
-         (container-type: inline-size) no aportan ancho propio: sin width
-         quedaban de 26px y el texto se salía. */
-      datos.style.width = '100%';
-      datos.style.maxWidth = '860px';
-      datos.style.margin = '6px auto 0';
+      datos.classList.add('portada-datos');
       caja.appendChild(datos);
 
       host.appendChild(caja);
