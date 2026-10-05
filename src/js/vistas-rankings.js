@@ -262,6 +262,18 @@
       });
 
       cuerpo.appendChild(fila);
+
+      /* Las donas cuentan el ranking completo de config.rankings, no solo las
+         filas que entran en la tabla. */
+      cuerpo.appendChild(
+        filaDonasPorJefe(
+          [
+            { titulo: 'De quién son los mejores', lista: ordenados.slice(0, config.rankings.locales_mejores), color: Datos.color('positivo'), jefeDe: (l) => l.jefe },
+            { titulo: 'De quién son los peores', lista: ordenados.slice(-config.rankings.locales_peores), color: Datos.color('negativo'), jefeDe: (l) => l.jefe }
+          ],
+          'locales'
+        )
+      );
     },
     notas: function (ctx) {
       const config = global.Datos.config;
@@ -370,6 +382,28 @@
       });
 
       cuerpo.appendChild(fila);
+
+      /* Las donas cuentan el ranking completo de config.rankings, no solo las
+         filas que entran en la tabla. */
+      cuerpo.appendChild(
+        filaDonasPorJefe(
+          [
+            {
+              titulo: 'De quién son los mejores',
+              lista: ordenados.slice(0, config.rankings.cajeros_mejores),
+              color: Datos.color('positivo'),
+              jefeDe: (m) => jefeDe(m.local)
+            },
+            {
+              titulo: 'De quién son los de menor IP',
+              lista: ordenados.slice(-config.rankings.cajeros_peores),
+              color: Datos.color('negativo'),
+              jefeDe: (m) => jefeDe(m.local)
+            }
+          ],
+          'cajeros'
+        )
+      );
     },
     notas: function (ctx) {
       const Datos = global.Datos;
