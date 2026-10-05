@@ -274,7 +274,6 @@
   "salida": {
     "archivo": "dist/presentacion.html",
     "archivo_validacion": "dist/validacion.txt",
-    "prefijo_por_jefe_zonal": "presentacion-",
     "tamanio_maximo_mb": 15
   }
 }

@@ -49,12 +49,13 @@ button, select, input { font-family: inherit; }
 
 .oculto { display: none !important; }
 
-/* ------------------------------------------------------------- scrollbars */
+/* ------------------------------------------------------------- scrollbars
+   Modo reunión (D-29): ninguna barra de desplazamiento visible en pantalla.
+   Lo que no entra se recorta; las notas del orador se siguen pudiendo
+   desplazar con la rueda del mouse, pero sin barra. */
 
-.scroll-fino::-webkit-scrollbar { width: 6px; height: 6px; }
-.scroll-fino::-webkit-scrollbar-track { background: var(--dark); }
-.scroll-fino::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 3px; }
-.scroll-fino::-webkit-scrollbar-thumb:hover { background: var(--amarillo); }
+html, body, * { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ---------------------------------------------------------------- header */
 

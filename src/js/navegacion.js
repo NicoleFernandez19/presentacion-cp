@@ -140,6 +140,17 @@
       return nodo;
     },
 
+    /* Sin scroll (D-29): los hijos que no entran enteros en el contenedor se
+       ocultan en lugar de quedar cortados a la mitad. Se mide después del layout. */
+    recortarHijos: function (contenedor) {
+      requestAnimationFrame(function () {
+        const alto = contenedor.clientHeight;
+        Array.from(contenedor.children).forEach(function (hijo) {
+          hijo.style.visibility = hijo.offsetTop - contenedor.offsetTop + hijo.offsetHeight > alto + 1 ? 'hidden' : '';
+        });
+      });
+    },
+
     elemento: function (etiqueta, clase, texto) {
       const nodo = document.createElement(etiqueta);
       if (clase) nodo.className = clase;

@@ -75,24 +75,11 @@ Toma `consolidado_transacciones.csv` (SF2, separando TEC por paycode) y
 `consolidado_wupos.csv` (MT). Si el proyecto está en otra ruta:
 `--origen "D:\ruta\Dashboard Canal Propio"`.
 
-### Una versión por jefe zonal
-
-El archivo completo trae datos nominales de cajeros de toda la red. Para
-repartir, conviene un archivo por zona con solo sus datos:
-
-```bash
-python scripts/preparar_datos.py --por-jefe-zonal
-```
-
-Deja `dist/presentacion.html` más un `dist/presentacion-<jefe-zonal>.html` por
-cada zona.
-
 ### Qué queda generado
 
 | Archivo | Qué es |
 |---|---|
 | `dist/presentacion.html` | La presentación completa, lista para abrir o mandar |
-| `dist/presentacion-<zona>.html` | Con `--por-jefe-zonal`: una por zona |
 | `dist/validacion.txt` | Reporte de validación de los datos de entrada |
 
 **Siempre leé `dist/validacion.txt`** antes de repartir el archivo: ahí salen los
@@ -133,7 +120,7 @@ anterior adentro, y con eso se habilitan las comparaciones interanuales.
 
 La columna **`grupo`** toma uno de tres valores —`SF2 sin TEC`, `TEC` o `MT`— y
 cada uno trae sus propios `tipo_operacion` (D-01). Si el dato no la trae, todo
-cae en un único grupo y el filtro no se muestra.
+cae en un único grupo.
 
 > **Dos cosas que no coinciden con el requerimiento original.**
 > 1. El índice de productividad es operaciones por **mes activo**, no por día
@@ -176,22 +163,16 @@ operación y la paleta. **La paleta está validada** para fondo oscuro y daltoni
 
 ## Cómo se usa la presentación
 
-- **Teclado:** flechas y Av Pág / Re Pág para avanzar, Inicio y Fin para ir a los
-  extremos, `F` para pantalla completa, `Esc` para cerrar el panel de detalle.
-- **Filtros:** la barra de arriba aplica a todas las láminas y se mantiene al
-  cambiar de lámina. Funcionan en cascada: al elegir un jefe zonal, los filtros
-  de localidad y local ofrecen solo lo suyo.
-- **Rankings de cajeros y filtro de Grupo:** en las dos láminas de ranking el IP
-  se calcula con las operaciones que dejan los filtros, así que elegir un grupo
-  en la barra reordena el ranking y contesta «quién rinde más en ese grupo»
-  (D-28). La categoría Alta/Media/Baja no cambia nunca: es la del año completo.
-- **Detalle:** clic en una fila de tabla o en una celda abre un panel lateral sin
-  salir de la lámina. Clic en un jefe zonal, localidad o local dentro de un
-  gráfico aplica ese filtro.
-- **Volver a una vista puntual:** el estado de los filtros y la lámina actual
-  quedan en la URL.
-- **PDF:** el botón *Imprimir* arma todas las láminas, una por página, con los
-  filtros activos impresos en el encabezado.
+Es una sola presentación para toda la red, pensada para proyectar en la reunión
+(D-29). No tiene filtros, ni botones que cambien la vista, ni barras de
+desplazamiento: muestra las láminas que lista `config.json` →
+`presentacion.laminas`, en ese orden.
+
+- **Navegación:** las flechas de abajo de la lámina, o el teclado: flechas y
+  Av Pág / Re Pág (sirve un puntero de presentación), Inicio y Fin para ir a
+  los extremos, `F` para pantalla completa.
+- **Notas del orador:** el botón *Mostrar Notas* abre la guía de cada lámina.
+- **PDF:** el botón *Imprimir* arma todas las láminas, una por página.
 
 ---
 
@@ -217,7 +198,7 @@ src/js/
   metricas.js                   Motor de métricas — sin DOM, se prueba en Node
   datos.js                      Etiquetas, colores y descarga de CSV
   graficos.js                   Tema y helpers de ECharts
-  filtros.js                    Barra de filtros en cascada y estado en la URL
+  filtros.js                    Estado fijo de la reunión (sin barra de filtros)
   navegacion.js                 Láminas, notas, proyección, detalle e impresión
   vistas-*.js                   Las 38 láminas, una sección por archivo
   app.js                        Arranque

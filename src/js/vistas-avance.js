@@ -35,15 +35,12 @@
     return texto(ventana.inicio) + ' contra ' + texto(ventana.fin);
   }
 
-  /* En el archivo por jefe zonal (D-15) el dataset trae una sola zona, así que
-     «la red» de esta lámina es esa zona y no la red. */
   function capitalizar(texto) {
     return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 
   function nombreDelTotal() {
-    const meta = global.Datos.raw.meta || {};
-    return meta.jefe_zonal ? 'esta zona' : 'la red';
+    return 'la red';
   }
 
   /* El número y su variación en una misma celda: antes eran dos columnas por

@@ -93,13 +93,6 @@
       datos.style.margin = '6px auto 0';
       caja.appendChild(datos);
 
-      if (meta.jefe_zonal) {
-        const aviso = UI.elemento('div', 'chip chip-info');
-        aviso.style.margin = '0 auto';
-        aviso.textContent = 'Versión de ' + meta.jefe_zonal;
-        caja.appendChild(aviso);
-      }
-
       host.appendChild(caja);
     },
     notas: function (ctx) {

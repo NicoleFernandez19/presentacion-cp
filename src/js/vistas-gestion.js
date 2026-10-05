@@ -38,20 +38,6 @@
     return new Set(global.Filtros.estado.jefes || []);
   }
 
-  /* En el archivo por jefe zonal (D-15) el dataset trae solo una zona, así que
-     la vara deja de ser la de la red y pasa a ser la de la propia zona. No es
-     un error del cálculo, pero significa otra cosa y hay que decirlo. */
-  function archivoDeUnaZona() {
-    const meta = global.Datos.raw.meta || {};
-    return meta.jefe_zonal !== undefined && meta.jefe_zonal !== null;
-  }
-
-  function avisoDeRecorte() {
-    return archivoDeUnaZona()
-      ? ' <strong>Este archivo trae una sola zona</strong>, así que la vara es la de esta zona y no la de la red: ' +
-        'para comparar contra el resto hay que abrir el archivo completo.'
-      : '';
-  }
 
   // -------------------------------------------- brecha dentro de la plaza
 
@@ -90,7 +76,7 @@
         this,
         'Son <strong>' + F().entero(visibles.length) + '</strong> localidades. Si el punto flojo de cada una ' +
           'rindiera como su vecino, serían <strong>' + F().entero(Math.round(total)) + '</strong> operaciones más, ' +
-          F().porcentaje(porcentaje, 2) + ' del período.' + avisoDeRecorte()
+          F().porcentaje(porcentaje, 2) + ' del período.'
       );
 
       const filas = [];

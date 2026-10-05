@@ -3,7 +3,6 @@ escribe dist/presentacion.html con todo embebido (estilos, scripts, ECharts).
 
     python scripts/preparar_datos.py --ejemplo
     python scripts/preparar_datos.py
-    python scripts/preparar_datos.py --por-jefe-zonal
 
 Los datos reales nunca salen del equipo: no hay red, ni telemetría, ni nombres
 de cajeros en el reporte de validación.
@@ -14,7 +13,6 @@ from __future__ import annotations
 import argparse
 import calendar
 import json
-import re
 import sys
 import unicodedata
 from datetime import date, datetime
@@ -637,59 +635,6 @@ def construir_datos(tablas: dict[str, pd.DataFrame], config: dict, origen: str) 
     return datos
 
 
-def recortar_por_jefe(datos: dict, jefe_idx: int) -> dict:
-    """Copia del dataset con solo los locales, cajeros y filas de un jefe zonal."""
-    import copy
-
-    d = copy.deepcopy(datos)
-    locales = d["dim"]["locales"]
-    conservar_local = {i for i, j in enumerate(locales["jefe"]) if j == jefe_idx}
-
-    filas = [i for i, l in enumerate(d["tx"]["local"]) if l in conservar_local]
-    for campo in ("periodo", "cajero", "local", "grupo", "tipo", "cantidad", "rechazadas"):
-        if d["tx"].get(campo) is not None:
-            d["tx"][campo] = [d["tx"][campo][i] for i in filas]
-
-    cajeros_visibles = set(d["tx"]["cajero"])
-    for i, l in enumerate(d["dim"]["cajeros"]["local_actual"]):
-        if l in conservar_local:
-            cajeros_visibles.add(i)
-
-    if d.get("actividad"):
-        idx = [i for i, c in enumerate(d["actividad"]["cajero"]) if c in cajeros_visibles]
-        for campo in ("periodo", "cajero", "dias"):
-            d["actividad"][campo] = [d["actividad"][campo][i] for i in idx]
-    if d.get("horaria"):
-        idx = [i for i, l in enumerate(d["horaria"]["local"]) if l in conservar_local]
-        for campo in ("periodo", "local", "dia", "hora", "cantidad"):
-            d["horaria"][campo] = [d["horaria"][campo][i] for i in idx]
-    if d.get("capacitaciones"):
-        d["capacitaciones"] = [c for c in d["capacitaciones"] if c["cajero"] in cajeros_visibles]
-    if d.get("hitos"):
-        d["hitos"] = [h for h in d["hitos"] if h["jefe"] in (-1, jefe_idx)]
-    if d.get("textos"):
-        d["textos"] = [t for t in d["textos"] if t["jefe"] in (-1, jefe_idx)]
-
-    # Los cajeros y locales de otras zonas se vacían en lugar de reindexarse:
-    # así los índices de tx siguen siendo válidos y no queda ningún dato nominal ajeno.
-    for i in range(len(d["dim"]["cajeros"]["id"])):
-        if i not in cajeros_visibles:
-            d["dim"]["cajeros"]["id"][i] = ""
-            d["dim"]["cajeros"]["nombre"][i] = ""
-            d["dim"]["cajeros"]["local_actual"][i] = -1
-            d["dim"]["cajeros"]["alta"][i] = 0
-            d["dim"]["cajeros"]["baja"][i] = 0
-    for i in range(len(locales["id"])):
-        if i not in conservar_local:
-            locales["id"][i] = ""
-            locales["nombre"][i] = ""
-            locales["jefe"][i] = -1
-
-    d["meta"]["jefe_zonal"] = d["dim"]["jefes"][jefe_idx]
-    d["meta"]["filas"]["transacciones"] = len(d["tx"]["periodo"])
-    return d
-
-
 # ------------------------------------------------------------------ salida
 
 
@@ -720,8 +665,6 @@ def construir_html(datos: dict, config: dict) -> str:
     )
 
     titulo = config["presentacion"]["titulo"]
-    if datos["meta"].get("jefe_zonal"):
-        titulo = f"{titulo} — {datos['meta']['jefe_zonal']}"
 
     html = plantilla
     html = html.replace("{{TITULO}}", titulo)
@@ -739,7 +682,6 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Genera la presentación anual de la red.")
     parser.add_argument("--ejemplo", action="store_true", help="usa data/ejemplo en vez de data/entrada")
     parser.add_argument("--carpeta", type=str, default=None, help="carpeta de datos alternativa")
-    parser.add_argument("--por-jefe-zonal", action="store_true", help="genera además un archivo por jefe zonal")
     parser.add_argument("--salida", type=str, default=None, help="ruta del HTML de salida")
     argumentos = parser.parse_args()
 
@@ -824,16 +766,6 @@ def main() -> int:
     print(f"OK  {salida}  ({tamanio:.1f} MB)")
     if tamanio > config["salida"]["tamanio_maximo_mb"]:
         print(f"AVISO: supera el objetivo de {config['salida']['tamanio_maximo_mb']} MB")
-
-    if argumentos.por_jefe_zonal:
-        for i, jefe in enumerate(datos["dim"]["jefes"]):
-            recorte = recortar_por_jefe(datos, i)
-            if not recorte["tx"]["periodo"]:
-                continue
-            nombre = re.sub(r"[^a-z0-9]+", "-", sin_acentos(jefe).lower()).strip("-")
-            destino = salida.parent / f"{config['salida']['prefijo_por_jefe_zonal']}{nombre}.html"
-            destino.write_text(construir_html(recorte, config), encoding="utf-8")
-            print(f"OK  {destino}  ({destino.stat().st_size / (1024 * 1024):.1f} MB)")
 
     print(f"Validación: {DIST / 'validacion.txt'}  ({reporte.errores} errores, {reporte.avisos} avisos)")
     return 0

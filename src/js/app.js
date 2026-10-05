@@ -19,7 +19,6 @@
     if (sello) {
       sello.textContent =
         '· datos al ' + datos.meta.fecha_corte +
-        (datos.meta.jefe_zonal ? ' · ' + datos.meta.jefe_zonal : '') +
         ' · generado ' + datos.meta.generado;
     }
 
