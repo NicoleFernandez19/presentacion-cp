@@ -156,7 +156,7 @@
               titulo: 'Operaciones',
               clave: 'total.ops',
               num: true,
-              ayuda: 'Total del período, sin normalizar: acá el tamaño sí pesa, así que no se compara entre zonas',
+              ayuda: 'Total del período, sin normalizar: aquí el tamaño sí incide, así que no se compara entre zonas',
               render: (f) => '<span class="tenue">' + F().compacto(f.total.ops) + '</span>'
             }
           ].map(function (col) {
@@ -195,7 +195,7 @@
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
         '<div class="guion">"Esta es la lámina de la reunión. Nadie se compara con el volumen del otro: ' +
-        'cada zona se compara con cómo arrancó ella misma, y todo está dividido por la cantidad de gente ' +
+        'cada zona se compara con su propio punto de partida, y todo está dividido por la cantidad de gente ' +
         'y de locales que tiene."</div></div>' +
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>Cada celda trae el <strong>valor al final del período</strong> y, al lado, cuánto varió contra ' +
@@ -203,15 +203,15 @@
         'El total de operaciones está en gris al final porque <em>no</em> es comparable entre zonas: ' +
         'depende del tamaño.</p>' +
         (red.varOperadores !== null && red.varOperadores < -0.5
-          ? '<p><strong>Ojo con el verde de «Ops. por operador».</strong> ' + capitalizar(nombreDelTotal()) +
+          ? '<p><strong>Precaución con el verde de «Ops. por operador».</strong> ' + capitalizar(nombreDelTotal()) +
             ' hizo <span class="dato">' + F().variacion(red.varOps) + '</span> de operaciones con ' +
             '<span class="dato">' + F().variacion(red.varOperadores) + '</span> de operadores: buena parte de ' +
             'esa mejora es el <strong>denominador cayendo</strong>, no más trabajo hecho. Por eso la columna ' +
             '<strong>Operadores</strong> está al lado, y conviene leer las dos juntas. Si alguien pregunta ' +
-            '«¿mejoramos?», la respuesta honesta es que cada uno hace más porque somos menos.</p>'
+            '«¿mejoramos?», la respuesta precisa es que cada operador realiza más operaciones porque son menos operadores.</p>'
           : '') +
         '<p>Se usan ventanas de ' + ventana.meses + (ventana.meses === 1 ? ' mes' : ' meses') +
-        ' en cada extremo y no trimestres calendario, para que nunca queden afuera los meses más recientes.</p></div>' +
+        ' en cada extremo y no trimestres calendario, para que nunca se excluyan los meses más recientes.</p></div>' +
         '<div class="bloque"><h4>Datos</h4><ul>' +
         '<li>Referencia: <span class="dato">' + etiquetaVentana(ventana) + '</span></li>' +
         '<li>La red: <span class="dato">' + F().variacion(red.varOpsPorOperador) + '</span> en operaciones por operador</li>' +
@@ -336,7 +336,7 @@
           lineaLectura.textContent = 'No hay series completas para este recorte.';
         } else if (esIndice) {
           lineaLectura.innerHTML =
-            'Arrancando todas en 100, <strong>' + finales[0].nombre + '</strong> cierra el período en <strong>' +
+            'Partiendo todas de 100, <strong>' + finales[0].nombre + '</strong> cierra el período en <strong>' +
             F().decimal(finales[0].valor, 0) + '</strong> y <strong>' + finales[finales.length - 1].nombre +
             '</strong> en <strong>' + F().decimal(finales[finales.length - 1].valor, 0) + '</strong>: ' +
             'la distancia entre las dos no es de tamaño, es de recorrido.';
@@ -346,7 +346,7 @@
             '</strong> cierra con <strong>' + F().entero(Math.round(finales[0].valor)) + '</strong> y <strong>' +
             finales[finales.length - 1].nombre + '</strong> con <strong>' +
             F().entero(Math.round(finales[finales.length - 1].valor)) + '</strong> en ' +
-            metricas[metrica].titulo.toLowerCase() + '. En valores absolutos pesa el tamaño de cada zona: ' +
+            metricas[metrica].titulo.toLowerCase() + '. En valores absolutos incide el tamaño de cada zona: ' +
             'para comparar recorridos está el índice.';
         }
 
@@ -417,7 +417,7 @@
       if (ctx.vacio) return '';
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
-        '<div class="guion">"Acá nadie arranca arriba ni abajo: todos salen de 100. Lo único que se ve ' +
+        '<div class="guion">"Ninguna zona parte con ventaja ni desventaja: todas inician en 100. Lo único que se ve ' +
         'es el camino que hizo cada zona durante el año."</div></div>' +
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>Cada línea es una zona, indexada a 100 en su primer mes del período. Un valor de 110 significa ' +
@@ -426,7 +426,7 @@
         '<p>El tooltip muestra el índice y, al lado, el valor real de ese mes.</p>' +
         '<p>El botón <strong>Valores absolutos</strong> saca el índice y muestra la serie tal cual, que es ' +
         'la vista que antes vivía en una lámina aparte. Sirve para ver el volumen real de cada zona, pero ' +
-        'ahí vuelve a pesar el tamaño: para comparar recorridos, el índice.</p></div>' +
+        'allí vuelve a incidir el tamaño: para comparar recorridos, el índice.</p></div>' +
         '<div class="bloque"><h4>Por qué no basta con dos puntos</h4>' +
         '<p>El tablero anterior compara principio contra final. Esta lámina muestra el recorrido entero: ' +
         'dos zonas pueden terminar en el mismo número habiendo hecho caminos muy distintos, y eso cambia ' +

@@ -1,7 +1,7 @@
 /* Cierre de la sección «Avances y retrocesos»: la única comparación de locales
    del mazo donde el potencial de la plaza está controlado (D-27).
 
-   Quedó una sola lámina. Las otras tres que hubo acá —«Los tres grupos del
+   Quedó una sola lámina. Las otras tres que hubo aquí —«Los tres grupos del
    año», «La cola que se puede recuperar» y «Dónde está la diferencia»— se
    sacaron entre el 2026-09-23 y el 2026-09-24, todas por el mismo motivo: sin
    una medida del potencial de cada plaza, cualquier ranking de locales o de
@@ -74,7 +74,7 @@
       const cuerpo = UI.cabecera(
         host,
         this,
-        'Son <strong>' + F().entero(visibles.length) + '</strong> localidades. Si el punto flojo de cada una ' +
+        'Son <strong>' + F().entero(visibles.length) + '</strong> localidades. Si el punto de menor rendimiento de cada una ' +
           'rindiera como su vecino, serían <strong>' + F().entero(Math.round(total)) + '</strong> operaciones más, ' +
           F().porcentaje(porcentaje, 2) + ' del período.'
       );
@@ -159,13 +159,13 @@
             {
               titulo: 'Brecha',
               num: true,
-              ayuda: 'Cuántas veces rinde más el mejor punto de la localidad que el flojo',
+              ayuda: 'Cuántas veces rinde más el mejor punto de la localidad que el de menor rendimiento',
               render: (f) => (f.ratio === null ? '' : '<span class="destacado">' + F().decimal(f.ratio, 2) + 'x</span>')
             },
             {
               titulo: 'En juego',
               num: true,
-              ayuda: 'Operaciones que sumaría el punto flojo si rindiera como el mejor',
+              ayuda: 'Operaciones que sumaría el punto de menor rendimiento si rindiera como el mejor',
               render: (f) => (f.oportunidad === null ? '' : F().entero(Math.round(f.oportunidad)))
             }
           ],
@@ -183,7 +183,7 @@
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
         '<div class="guion">' +
-        '"Acá no hay potencial de plaza que valga: son locales de la misma localidad y del mismo jefe zonal. ' +
+        '"Aquí no hay potencial de plaza que valga: son locales de la misma localidad y del mismo jefe zonal. ' +
         'Si uno rinde el doble que el de al lado, la pregunta es qué tiene uno que no tenga el otro, y ' +
         'cuántas personas hay puestas en cada uno."' +
         '</div></div>' +
@@ -195,7 +195,7 @@
         'Y entre personas no hay nada que buscar: dentro de un mismo local todos rinden parecido ' +
         '(4 cajeros de 663 quedan bajo el 60% de sus compañeros de mostrador).</p>' +
         '<p>Entran solo los locales con <strong>' + cb.minimo_meses_local + ' meses o más</strong> de actividad. ' +
-        'Una apertura reciente o un local al que se mudó el equipo no es un local flojo, y mezclarlos era ' +
+        'Una apertura reciente o un local al que se mudó el equipo no es un local de bajo rendimiento, y mezclarlos era ' +
         'la forma más rápida de castigar a quien abrió un punto.</p>' +
         '</div>' +
         '<div class="bloque"><h4>Datos</h4><ul>' +

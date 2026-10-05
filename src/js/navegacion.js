@@ -110,8 +110,8 @@
     'rendimiento': 'Operaciones reales sobre las esperadas según el grupo de pares.',
     'cobertura': 'Qué proporción de su gente está operando.',
     'cola': 'Peso de los cajeros que quedan sistemáticamente por debajo de sus pares.',
-    'brecha': 'Cuántas veces rinde más el mejor punto de la localidad que el más flojo.',
-    'en juego': 'Operaciones que sumaría el punto flojo si rindiera como el mejor de su misma localidad.',
+    'brecha': 'Cuántas veces rinde más el mejor punto de la localidad que el de menor rendimiento.',
+    'en juego': 'Operaciones que sumaría el punto de menor rendimiento si rindiera como el mejor de su misma localidad.',
     'índice': 'Puntaje que combina los cuatro pilares con los pesos definidos en la configuración. Se muestra con su margen de error: dos zonas cuyas bandas se superponen no están realmente separadas.',
     '# vol.': 'Puesto que le daría ordenar por cantidad de operaciones, para contrastar contra el criterio nuevo.'
   };

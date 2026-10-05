@@ -1,7 +1,8 @@
 /* Estado de filtros de la presentación. En modo reunión no hay barra ni
-   interacción: el estado queda fijo en el inicial (año completo, toda la red)
-   y los métodos que cambiaban filtros o dibujaban controles son inertes. La
-   única señal que se lee de la URL es la lámina (#l=N), para volver a una. */
+   interacción, con una sola excepción: el selector de tipo de operación
+   (Todos / SF2 sin TEC / MT / TEC) dentro de la lámina (esquina superior derecha, visible en pantalla completa). El resto
+   del estado queda fijo en el inicial (año completo, toda la red). La única
+   señal que se lee de la URL es la lámina (#l=N), para volver a una. */
 (function (global) {
   'use strict';
 
@@ -16,6 +17,7 @@
       Filtros.alCambiar = alCambiar;
       Filtros.estado = Filtros.estadoInicial();
       Filtros.leerUrl();
+      Filtros.render();
       return Filtros.estado;
     },
 
@@ -53,8 +55,39 @@
 
     // -------------------------------------------------------------- render
 
-    /* Sin barra de filtros: nada que dibujar. */
-    render: function () {},
+    /* Selector de tipo de operación: dentro del marco de la lámina, para que siga a la vista en pantalla completa. */
+    render: function () {
+      const destino = global.document && global.document.getElementById('slide-frame');
+      if (!destino || destino.querySelector('.selector-grupo')) return;
+      const dim = (global.Datos.raw.dim.grupos) || [];
+      const opciones = [{ rotulo: 'Todos', indice: null }];
+      [['SF2 sin TEC', 'SF2 (sin TEC)'], ['MT', 'MT'], ['TEC', 'TEC']].forEach(function (par) {
+        const indice = dim.indexOf(par[0]);
+        if (indice >= 0) opciones.push({ rotulo: par[1], indice: indice, titulo: global.Datos.descripcionGrupo(indice) });
+      });
+      if (opciones.length < 3) return;
+      const caja = global.document.createElement('div');
+      caja.className = 'selector-grupo no-imprimir';
+      caja.setAttribute('role', 'group');
+      caja.setAttribute('aria-label', 'Tipo de operación');
+      opciones.forEach(function (o) {
+        const b = global.document.createElement('button');
+        b.type = 'button';
+        b.textContent = o.rotulo;
+        if (o.titulo) b.title = o.titulo;
+        b.addEventListener('click', function () {
+          Filtros.estado.grupos = o.indice === null ? [] : [o.indice];
+          Array.prototype.forEach.call(caja.children, function (x) {
+            x.classList.toggle('activo', x === b);
+          });
+          b.blur();
+          Filtros.cambio();
+        });
+        if (o.indice === null) b.classList.add('activo');
+        caja.appendChild(b);
+      });
+      destino.appendChild(caja);
+    },
 
     /* Un clic en un jefe zonal, localidad o local dentro de un gráfico aplica
        ese filtro. Inerte en modo reunión. */

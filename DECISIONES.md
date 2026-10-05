@@ -697,6 +697,9 @@ reunión, no para explorar datos:
   `config.json` → `presentacion.laminas` (14 láminas). `filas_ranking` fija
   cuántas filas entran por lista y `mostrar_nombres_cajeros` en `false` muestra
   solo el legajo.
+- **Excepción: tipo de operación.** Por pedido posterior de la usuaria hay
+  botones dentro de la lámina, en su esquina superior derecha (visibles en pantalla completa), (Todos, SF2 sin TEC, MT, TEC) que filtran
+  todas las láminas por grupo (`Filtros.estado.grupos`). Es el único control.
 - **Una sola presentación general** (D-15): no hay archivos por jefe zonal.
 - **Cierre rediseñado (2026-10-05).** *Hallazgos por zona* es una tabla con
   todas las zonas (operaciones, variación, avance, % en alta, operadores/mes) y

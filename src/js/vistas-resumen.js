@@ -101,7 +101,7 @@
         '<div class="bloque"><h4>Guión para el orador</h4>' +
         '<div class="guion">"Vamos a recorrer cómo evolucionó la red durante el año: cuánto operamos, ' +
         'cómo se movió la actividad de los cajeros y dónde están las oportunidades por zona. ' +
-        'Al final, cada uno se lleva el detalle de su zona."</div></div>' +
+        'Al final, cada participante recibe el detalle de su zona."</div></div>' +
         '<div class="bloque"><h4>Concepto clave</h4>' +
         '<p>Todas las cifras son de la red completa y del período por defecto: no hay filtros que cambien ' +
         'lo que se ve, así que lo que se proyecta es lo mismo que mira cada jefe zonal después.</p></div>' +
@@ -162,7 +162,7 @@
            artefacto: se muestra el rango real de operadores en su lugar. */
         global.Datos.dotacionInferida()
           ? {
-            rotulo: 'Mes más flojo',
+            rotulo: 'Mes de menor actividad',
             valor: F().entero(Math.min.apply(null, ctx.porMes().map((m) => m.cajerosConActividad))),
             detalle: 'operadores del mes con menos actividad'
           }

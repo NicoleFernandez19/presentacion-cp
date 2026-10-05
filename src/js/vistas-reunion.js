@@ -231,7 +231,7 @@
         '<div class="guion">"Antes de entrar al detalle, cuatro mensajes: cuánto hicimos, con cuánta gente, ' +
         'cómo se movió la productividad y qué zonas avanzan. El resto de la reunión es la prueba de estos cuatro."</div></div>' +
         (menosGente(m)
-          ? '<div class="bloque"><h4>Ojo</h4><p>Hay menos operadores que al arranque, así que parte de la mejora ' +
+          ? '<div class="bloque"><h4>Advertencia</h4><p>Hay menos operadores que al arranque, así que parte de la mejora ' +
           'en operaciones por operador es el denominador cayendo y no más trabajo hecho. Conviene decirlo antes ' +
           'de que lo pregunten.</p></div>'
           : '') +

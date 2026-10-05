@@ -374,7 +374,7 @@
       const linea =
         '<strong>' + F().entero(locales.length) + '</strong> locales y <strong>' + F().entero(cajeros.length) +
         '</strong> cajeros repartidos entre <strong>' + F().entero(jefes.size) + '</strong> jefes zonales: ' +
-        'buscá por nombre para ver a quién pertenece cada uno.';
+        'busque por nombre para ver a qué jefe zonal pertenece cada uno.';
 
       const cuerpo = UI.cabecera(host, this, linea);
       const fila = UI.fila(true);
@@ -448,7 +448,7 @@
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>El color de la etiqueta de jefe zonal es el mismo que usa esa zona en todos los gráficos ' +
         'de la presentación, así que se puede seguir el rastro de una zona lámina a lámina.</p>' +
-        '<p>Un cajero puede haber operado en locales de más de una zona; acá figura el local ' +
+        '<p>Un cajero puede haber operado en locales de más de una zona; aquí figura el local ' +
         'de su período más reciente. Clic en una fila abre su detalle.</p></div>' +
         '<div class="bloque"><h4>Datos</h4><ul>' +
         '<li>Locales: <span class="dato">' + F().entero(locales.length) + '</span></li>' +

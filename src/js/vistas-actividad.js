@@ -55,7 +55,7 @@
       if (inferida) {
         tarjetas.push(
           { rotulo: 'Mes más alto', valor: F().entero(maximo.cajerosConActividad), detalle: F().capitalizar(F().mes(maximo.periodo)) },
-          { rotulo: 'Mes más flojo', valor: F().entero(minimo.cajerosConActividad), detalle: F().capitalizar(F().mes(minimo.periodo)) }
+          { rotulo: 'Mes de menor actividad', valor: F().entero(minimo.cajerosConActividad), detalle: F().capitalizar(F().mes(minimo.periodo)) }
         );
       } else {
         tarjetas.push(

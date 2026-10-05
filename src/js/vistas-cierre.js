@@ -292,7 +292,7 @@
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
         '<div class="guion">"Cerramos con lo que cada uno se lleva para el trimestre que viene. ' +
-        'Estos textos se cargan con los datos, así que la próxima presentación arranca comparando contra esto."</div></div>' +
+        'Estos textos se cargan con los datos, así que la próxima presentación se iniciará comparando contra esto."</div></div>' +
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>Los objetivos vienen de la tabla <code>textos_cierre</code> del archivo de datos: ' +
         'se editan ahí y se regeneran con el resto de la presentación, no se escriben a mano en el HTML.</p></div>' +

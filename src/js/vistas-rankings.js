@@ -300,12 +300,12 @@
         'local con un solo cajero puede aparecer arriba o abajo con poca evidencia detrás. El tooltip muestra ' +
         'cuántos cajeros lo sostienen.</p>' +
         '<p>Entran solo los locales con <strong>' + minimoMeses + ' meses o más de actividad</strong>. ' +
-        'Sin ese corte, los últimos puestos se llenaban de aperturas del año: un local con cuatro meses de ' +
-        'vida rinde poco porque recién arranca, no porque se trabaje mal.</p></div>' +
+        'Sin ese corte, los últimos puestos estarían ocupados por aperturas del año: un local con cuatro meses de ' +
+        'vida rinde poco por encontrarse en su etapa inicial, no por una mala gestión.</p></div>' +
         '<div class="bloque"><h4>Datos</h4><ul>' +
         '<li>Locales comparables: <span class="dato">' + F().entero(locales.length) + '</span></li>' +
         (excluidos
-          ? '<li>Dejados afuera por poca vida: <span class="dato">' + F().entero(excluidos) + '</span></li>'
+          ? '<li>Excluidos por poca antigüedad: <span class="dato">' + F().entero(excluidos) + '</span></li>'
           : '') +
         '</ul></div>'
       );
@@ -412,9 +412,9 @@
           '<div class="bloque"><h4>Cómo se lee</h4>' +
           '<p>El orden es <strong>' +
           (config.rankings.modo_por_defecto === 'absoluto' ? 'absoluto' : 'relativo') +
-          '</strong>. Quedan afuera los cajeros que no llegan a ' + config.productividad.minimo_meses_activos +
+          '</strong>. Se excluyen los cajeros que no llegan a ' + config.productividad.minimo_meses_activos +
           ' meses activos y los que no tienen ninguna operación en el recorte.</p>' +
-          '<p>Un puesto acá <strong>no es una conclusión sobre la persona</strong>: dentro de un mismo ' +
+          '<p>Un puesto en este listado <strong>no es una conclusión sobre la persona</strong>: dentro de un mismo ' +
           'local todos rinden parecido, así que buena parte de esta distancia es el local donde atiende ' +
           'cada uno.</p></div>' +
           '<div class="bloque"><h4>Datos</h4><ul>' +
@@ -435,7 +435,7 @@
     panel: 'Mejores cajeros',
     verbo: 'encabeza',
     color: 'positivo',
-    guion: 'Estos son los que más rinden. A la derecha, de quién es cada uno: si una zona se lleva buena parte de la lista, ahí hay algo que vale la pena copiar.'
+    guion: 'Estos son los cajeros de mayor rendimiento. A la derecha se indica a qué zona pertenece cada uno: si una zona se lleva buena parte de la lista, allí hay prácticas que conviene replicar.'
   });
 
   laminaCajeros({
@@ -446,7 +446,7 @@
     panel: 'Cajeros con menor IP',
     verbo: 'cierra la lista',
     color: 'negativo',
-    guion: 'Estos son los que menos operan por mes activo. A la derecha, de quién es cada uno. Si una zona aparece en las dos listas, quiere decir que adentro de esa zona hay mucha distancia entre sus locales.'
+    guion: 'Estos son los cajeros con menos operaciones por mes activo. A la derecha se indica a qué zona pertenece cada uno. Si una zona aparece en las dos listas, quiere decir que dentro de esa zona hay una brecha amplia entre sus locales.'
   });
 
 })(typeof globalThis !== 'undefined' ? globalThis : this);

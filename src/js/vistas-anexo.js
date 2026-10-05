@@ -147,7 +147,7 @@
           descargar: function (filas) {
             Datos.descargarCsv(
               'cajeros.csv',
-              ['Legajo', 'Cajero', 'Local', 'Jefe zonal', 'Tipo de zona', 'Operaciones', 'Meses activos', 'Meses habilitado', '% meses activos', 'IP', 'Percentil', 'Categoria'],
+              ['Legajo', 'Cajero', 'Local', 'Jefe zonal', 'Tipo de zona', 'Operaciones', 'Meses activos', 'Meses habilitado', '% meses activos', 'IP', 'Percentil', 'Categoría'],
               filas.map(function (m) {
                 return [
                   Datos.idCajero(m.cajero),
@@ -173,7 +173,7 @@
       const metricas = ctx.metricasCajeros();
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
-        '<div class="guion">"Si alguien pregunta por un cajero puntual, está acá. Es la misma información ' +
+        '<div class="guion">"Si alguien pregunta por un cajero puntual, está aquí. Es la misma información ' +
         'que alimenta todas las láminas anteriores."</div></div>' +
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>El buscador filtra por nombre, legajo, local o jefe zonal, y la descarga respeta lo que se está ' +
@@ -264,7 +264,7 @@
           descargar: function (filas) {
             Datos.descargarCsv(
               'locales.csv',
-              ['Id local', 'Local', 'Localidad', 'Provincia', 'Jefe zonal', 'Tipo de zona', 'Operaciones', 'Cajeros habilitados', 'Cajeros con actividad', '% sin actividad', 'Operaciones por cajero', 'IP promedio', 'Categoria'],
+              ['Id local', 'Local', 'Localidad', 'Provincia', 'Jefe zonal', 'Tipo de zona', 'Operaciones', 'Cajeros habilitados', 'Cajeros con actividad', '% sin actividad', 'Operaciones por cajero', 'IP promedio', 'Categoría'],
               filas.map(function (l) {
                 return [
                   Datos.idLocal(l.local),

@@ -266,10 +266,10 @@
       return (
         '<div class="bloque"><h4>Guión para el orador</h4>' +
         '<div class="guion">"Como los umbrales son de la red, si una zona tuviera exactamente el promedio ' +
-        'le tocaría un tercio en cada categoría. Lo que se ve acá es quién se despega de ese tercio."</div></div>' +
+        'le tocaría un tercio en cada categoría. Lo que se observa aquí es qué zonas se apartan de ese tercio."</div></div>' +
         '<div class="bloque"><h4>Cómo se lee</h4>' +
         '<p>En modo porcentaje, las tres barras suman 100% sobre los cajeros con datos suficientes: ' +
-        'los «' + Datos.categoria('sin_datos') + '» quedan afuera del cálculo y aparecen en el tooltip.</p></div>' +
+        'los «' + Datos.categoria('sin_datos') + '» quedan excluidos del cálculo y aparecen en el tooltip.</p></div>' +
         '<div class="bloque"><h4>Datos</h4><ul>' +
         CATEGORIAS.map(function (c) {
           return '<li>' + Datos.categoria(c) + ': <span class="dato">' + F().entero(red[c]) + '</span> (' +

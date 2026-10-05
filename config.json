@@ -5,7 +5,7 @@
     "presentador": "Jefatura de Jefes Zonales",
     "area": "Operaciones Argentina",
     "objetivo_reunion": "Revisar la evolución de la red durante el año: volumen, actividad y productividad de los cajeros, por jefe zonal y por tipo de zona.",
-    "_nota_modo_reunion": "Modo reunión: sin filtros ni interacción. 'laminas' es el guion, en orden; una lámina registrada que no figura acá no se presenta. 'filas_ranking' es cuántas filas entran por lista sin scroll. 'mostrar_nombres_cajeros' en false muestra solo el legajo.",
+    "_nota_modo_reunion": "Modo reunión: sin filtros ni interacción. 'laminas' es el guion, en orden; una lámina registrada que no figura acá no se presenta. 'filas_ranking' es cuántas filas entran por lista sin scroll. 'mostrar_nombres_cajeros' en false muestra solo el legajo (por defecto se muestra el nombre).",
     "laminas": [
       "Portada",
       "Resumen ejecutivo",
@@ -24,7 +24,7 @@
       "Decisiones y próximos pasos"
     ],
     "filas_ranking": 5,
-    "mostrar_nombres_cajeros": false
+    "mostrar_nombres_cajeros": true
   },
   "periodo": {
     "modo_ultimo_mes": "ultimo_completo",
