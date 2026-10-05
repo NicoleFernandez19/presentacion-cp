@@ -284,7 +284,8 @@ pregunta concreta para negocio es **si existe una categorización de plaza o de
 sucursal** (A/B/C, potencial, población) que se pueda usar como grupo de pares:
 si existe, entra por `plazas.csv` sin tocar una línea de código.
 
-**En el archivo por jefe zonal (D-15) la vara cambia de significado.** Ese
+**(Sin efecto desde 2026-10-05: ya no hay archivo por jefe zonal, ver D-15.)**
+**En el archivo por jefe zonal la vara cambiaba de significado.** Ese
 archivo trae solo los locales y las filas de una zona, así que la mediana del
 grupo de pares pasa a calcularse con los cajeros de esa misma zona: el
 rendimiento da cerca de 1,00 por construcción y la cola crónica se vuelve "el
@@ -597,13 +598,17 @@ Aires, CABA y Córdoba, que tienen 5, 5 y 2 jefes zonales**, así que a nivel
 provincia el color por jefe zonal no se puede resolver justo donde está la red.
 Decisión de la usuaria el 2026-09-22: **no se hace ningún mapa** hasta que haya
 coordenadas reales.
-### D-15 — Distribución: archivo completo por defecto
+### D-15 — Distribución: una sola presentación general
 
-`preparar_datos.py` genera `dist/presentacion.html` con toda la red. La opción
-`--por-jefe-zonal` agrega un archivo por jefe zonal con solo sus datos. Cuál se
-distribuye sigue pendiente de validación (§10 del requerimiento), pero como el
-archivo completo trae datos nominales de cajeros de toda la red, la versión por
-jefe zonal es la recomendada para enviar fuera del equipo.
+**Decisión de la usuaria (2026-10-05):** se reparte solo `dist/presentacion.html`,
+con toda la red. Se sacó la opción `--por-jefe-zonal` de `preparar_datos.py` y
+todo el código que adaptaba las láminas a un archivo de una sola zona.
+
+Antes se recomendaba un archivo por jefe zonal para enviar fuera del equipo,
+porque el completo trae datos de cajeros de toda la red. Ese riesgo baja con
+`presentacion.mostrar_nombres_cajeros: false` (D-29), que muestra solo el legajo,
+pero el archivo sigue trayendo los datos de toda la red adentro: conviene no
+mandarlo fuera del equipo.
 
 ### D-16 — Etiquetas de los tipos de operación
 
@@ -675,3 +680,25 @@ sección.
 Sin servicios externos, sin telemetría, sin logs con datos de cajeros. El reporte
 de validación (`dist/validacion.txt`) referencia **IDs**, nunca nombres. Los
 archivos reales viven en `data/entrada/`, excluida del control de versiones.
+
+### D-29 — Modo reunión: sin filtros, sin deslizadores, una sola presentación
+
+**Decisión de la usuaria (2026-10-05).** La presentación es para proyectar en la
+reunión, no para explorar datos, así que se recorre solo con el teclado:
+
+- **Sin filtros.** No hay barra de filtros ni clics que filtren desde un gráfico;
+  todo se muestra con el estado inicial (año completo, toda la red). Esto deja
+  sin efecto la parte interactiva de §5 del requerimiento y de D-28.
+- **Sin deslizadores ni controles en pantalla.** Se sacaron la barra de escala de
+  los mapas de calor (el valor ya está escrito en cada celda), las leyendas con
+  flechas para desplazarse, la barra de progreso y las flechas de
+  anterior/siguiente debajo de la lámina. Los botones que alternaban vistas
+  quedan ocultos y las tablas no tienen scroll.
+- **Guion fijo.** Las láminas que se presentan y su orden están en
+  `config.json` → `presentacion.laminas` (14 láminas). `filas_ranking` fija
+  cuántas filas entran por lista y `mostrar_nombres_cajeros` en `false` muestra
+  solo el legajo.
+- **Una sola presentación general** (D-15): no hay archivos por jefe zonal.
+
+La versión interactiva anterior, con filtros, quedó en
+`respaldo_version_interactiva/` y no se modificó.

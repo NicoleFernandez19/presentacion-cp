@@ -348,14 +348,6 @@ main.escenario {
   background: linear-gradient(to top right, rgba(255, 204, 0, 0.05), transparent 45%, rgba(129, 140, 248, 0.05));
 }
 
-.progreso { position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #172033; z-index: 10; }
-
-#slide-progress-bar {
-  height: 100%;
-  background: linear-gradient(to right, var(--amarillo), var(--indigo));
-  transition: width 0.3s;
-}
-
 #slide-viewport {
   z-index: 5;
   flex-grow: 1;
@@ -381,30 +373,6 @@ main.escenario {
 }
 
 #slide-number { color: var(--amarillo); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
-
-.controles { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 18px; flex-shrink: 0; }
-
-.boton-redondo {
-  background: var(--card);
-  border: 1px solid var(--borde);
-  color: var(--texto-suave);
-  width: 38px; height: 38px;
-  border-radius: 999px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: transform 0.15s, color 0.15s;
-}
-
-.boton-redondo:hover { color: #fff; transform: scale(1.06); }
-
-.pista {
-  font-size: 11px;
-  background: var(--card);
-  border: 1px solid var(--borde);
-  padding: 7px 16px;
-  border-radius: 999px;
-  color: var(--texto-suave);
-}
 
 /* --------------------------------------------------------- contenido lámina */
 
@@ -769,7 +737,7 @@ section#notes-panel {
 
 @media print {
   body { background: #fff !important; color: #111; overflow: visible; display: block; height: auto; }
-  header.barra, .filtros, aside#sidebar, section#notes-panel, .controles, main.escenario,
+  header.barra, .filtros, aside#sidebar, section#notes-panel, main.escenario,
   #panel-detalle, #modal, .no-imprimir { display: none !important; }
 
   #print-root { display: block !important; position: static !important; left: auto !important; width: auto !important; }
@@ -822,7 +790,7 @@ main.escenario { overflow: hidden; }
 
 #slide-frame {
   max-width: none;
-  width: min(100%, calc((100vh - 128px) * 16 / 9));
+  width: min(100%, calc((100vh - 100px) * 16 / 9));
 }
 
 #slide-frame .panel-titulo .boton,
